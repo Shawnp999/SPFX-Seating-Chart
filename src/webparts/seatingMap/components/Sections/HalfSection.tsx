@@ -1,7 +1,7 @@
 import * as React from 'react';
-import departmentColors from './DepartmentColors';
+import departmentColors from '../Utilities/DepartmentColors';
 import styles from '../SeatingMap.module.scss';
-import { UserWithSeat as ImportedUserWithSeat } from '../Sections/FetchUserData';
+import { UserWithSeat as ImportedUserWithSeat } from '../Utilities/FetchUserData';
 
 interface EmployeeDesk {
     employeeKey: string;
@@ -22,7 +22,7 @@ interface HalfSectionProps {
     users: ImportedUserWithSeat[];
     onDeskClick: (user: ImportedUserWithSeat | undefined) => void;
     bossRoom: boolean;
-    bossDeskPosition?: { gridRow: number; gridColumn: string }; // Optional position for the boss desk
+    bossDeskPosition?: { gridRow: number; gridColumn: string }; // Optional
 }
 
 const HalfSection: React.FC<HalfSectionProps> = ({

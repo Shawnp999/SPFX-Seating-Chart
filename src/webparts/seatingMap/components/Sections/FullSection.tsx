@@ -1,9 +1,9 @@
 // src/webparts/SeatingMap/components/Sections/FullSection.tsx
 
 import * as React from 'react';
-import departmentColors from './DepartmentColors';
+import departmentColors from '../Utilities/DepartmentColors';
 import styles from '../SeatingMap.module.scss';
-import { UserWithSeat as ImportedUserWithSeat } from '../Sections/FetchUserData';
+import { UserWithSeat as ImportedUserWithSeat } from '../Utilities/FetchUserData';
 
 interface EmployeeDesk {
     employeeKey: string;
@@ -24,6 +24,7 @@ interface FullSectionProps {
     highlightedColumns: HighlightedColumn[];
     users: ImportedUserWithSeat[];
     onDeskClick: (user: ImportedUserWithSeat | undefined) => void;
+    bossDeskPosition?: { gridRow: number; gridColumn: string };
 
 }
 
@@ -36,6 +37,7 @@ const FullSection: React.FC<FullSectionProps> = ({
                                                      highlightedColumns,
                                                      users,
                                                      onDeskClick,
+                                                     bossDeskPosition
                                                  }) => {
 
 
@@ -136,7 +138,8 @@ const FullSection: React.FC<FullSectionProps> = ({
                                 <div
                                     key={`boss-${i + 1}`}
                                     className={`${styles.desk} ${styles.largeDesk} ${isHighlighted ? styles.highlightedDesk : ''}`}
-                                    style={{ borderTop: '1px solid black' }}
+                                    style={bossDeskPosition || { gridRow: 2, gridColumn: '1 / span 2' }}
+
                                     onClick={() => onDeskClick(assignedUser)}
                                     data-testid={`desk-${section}-boss-${i + 1}`}
                                 >
