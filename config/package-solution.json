@@ -1,0 +1,40 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/spfx-build/package-solution.schema.json",
+  "solution": {
+    "name": "uzmto-seating-map-client-side-solution",
+    "id": "96fb8497-7779-4cf1-9761-9e8eda095006",
+    "version": "1.0.0.0",
+    "includeClientSideAssets": true,
+    "skipFeatureDeployment": true,
+    "isDomainIsolated": false,
+    "developer": {
+      "name": "",
+      "websiteUrl": "",
+      "privacyUrl": "",
+      "termsOfUseUrl": "",
+      "mpnId": "Undefined-1.18.2"
+    },
+    "metadata": {
+      "shortDescription": {
+        "default": "uzmto-seating-map description"
+      },
+      "longDescription": {
+        "default": "uzmto-seating-map description"
+      },
+      "screenshotPaths": [],
+      "videoUrl": "",
+      "categories": []
+    },
+    "features": [
+      {
+        "title": "uzmto-seating-map Feature",
+        "description": "The feature that activates elements of the uzmto-seating-map solution.",
+        "id": "3d6f0ea6-eb91-46bf-a71c-d41609c9252e",
+        "version": "1.0.0.0"
+      }
+    ]
+  },
+  "paths": {
+    "zippedPackage": "solution/uzmto-seating-map.sppkg"
+  }
+}

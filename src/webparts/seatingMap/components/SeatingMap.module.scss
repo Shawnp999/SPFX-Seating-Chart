@@ -1,0 +1,152 @@
+.mainContainer {
+  margin: 50px;
+  border: solid 1px black;
+  height: 800px;
+  overflow-x: auto;
+  white-space: nowrap;
+  padding: 10px;
+  /* temp */
+  overflow-y: clip;
+}
+
+.sectionsContainer {
+  height: 60%;
+  display: inline-flex;
+  justify-content: flex-start;
+}
+
+.topSectionsCont {
+  height: 30%;
+  display: inline-flex;
+  justify-content: flex-start;
+}
+
+.fullSection {
+  display: inline-block;
+  width: 300px;
+}
+
+.halfSection {
+  display: inline-block;
+  width: 150px;
+  border: 2px solid black;
+  height: 100%;
+}
+
+.emptyFullSection {
+  display: inline-block;
+  width: 300px;
+}
+
+.emptyHalfSection {
+  display: inline-block;
+  width: 150px;
+}
+
+
+
+
+/*.full-section {*/
+/*  display: flex;*/
+/*  justify-content: center;*/
+/*  align-items: center;*/
+/*  padding: 30px 10px 30px 10px;*/
+/*  box-sizing: border-box;*/
+/*}*/
+
+
+
+
+.officeLayout {
+  display: grid;
+  grid-template-rows: repeat(5, 1fr);
+  grid-template-columns: repeat(4, 1fr);
+  /*gap: 5px;*/
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+}
+
+.meetingRoom {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  /*border: 1px solid #000;*/
+}
+
+.meetingRoomTable {
+  width: 80%;
+  height: 80%;
+  background-color: #ccc;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.desk {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid grey;
+  width: 50%;
+  height: 90%;
+  position: relative;
+  overflow: hidden;
+}
+
+.deskOdd {
+  justify-self: end;
+}
+
+.deskEven {
+  justify-self: start;
+}
+
+.highlightedDesk {
+  background-color: red;
+}
+
+.seat {
+  position: absolute;
+  font-size: 14px;
+  font-weight: bold;
+  max-width: 100%;
+}
+
+.largeDesk {
+  width: 30%;
+  height: 70%;
+  border: 1px solid grey;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+
+/*    half section css   */
+
+
+
+.officeLayoutHalf {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: repeat(4, 1fr);
+  height: 100%;
+  /*gap:10px;*/
+  /*padding: 10px;*/
+  align-items: center;
+  justify-items: center;
+}
+
+.deskHalf {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid grey;
+  width: 80%;
+  height: 70%;
+  position: relative;
+}
+
+
