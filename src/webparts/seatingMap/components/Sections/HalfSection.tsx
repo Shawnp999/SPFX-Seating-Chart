@@ -1,5 +1,3 @@
-// src/webparts/SeatingMap/components/Sections/HalfSection.tsx
-
 import * as React from 'react';
 import departmentColors from './DepartmentColors';
 import styles from '../SeatingMap.module.scss';
@@ -23,6 +21,8 @@ interface HalfSectionProps {
     highlightedColumns: HighlightedColumn[];
     users: ImportedUserWithSeat[];
     onDeskClick: (user: ImportedUserWithSeat | undefined) => void;
+    bossRoom: boolean;
+    bossDeskPosition?: { gridRow: number; gridColumn: string }; // Optional position for the boss desk
 }
 
 const HalfSection: React.FC<HalfSectionProps> = ({
@@ -33,6 +33,8 @@ const HalfSection: React.FC<HalfSectionProps> = ({
                                                      highlightedColumns,
                                                      users,
                                                      onDeskClick,
+                                                     bossRoom,
+                                                     bossDeskPosition,
                                                  }) => {
     const { employeeKey, employeeDep } = employeeDesk;
     const borderColor = departmentColors[section] || 'darkgoldenrod';
@@ -75,6 +77,36 @@ const HalfSection: React.FC<HalfSectionProps> = ({
 
             deskCounter++;
         }
+    }
+
+    if (bossRoom) {
+        const isHighlighted = section === parseInt(employeeDep) && deskCounter === parseInt(employeeKey);
+        const assignedUser = users.find(user => user.section === section.toString() && user.seat === deskCounter.toString());
+
+        desks.push(
+            <div
+                key={`boss-desk`}
+                className={`${styles.deskHalf} ${styles.largeDesk} ${isHighlighted ? styles.highlightedDesk : ''}`}
+                style={bossDeskPosition || { gridRow: 2, gridColumn: '1 / span 2' }}
+                onClick={() => {
+                    console.log('Boss desk clicked');
+                    console.log('Assigned user:', assignedUser);
+                    onDeskClick(assignedUser);
+                }}
+                data-testid={`desk-${section}-${deskCounter}`}
+            >
+                <div className={styles.seat}>
+                    {deskCounter}
+                    {assignedUser && (
+                        <div>
+                            {assignedUser.displayName}
+                        </div>
+                    )}
+                </div>
+            </div>
+        );
+
+        deskCounter++;
     }
 
     return (

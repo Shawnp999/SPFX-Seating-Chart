@@ -98,7 +98,11 @@ const FullSection: React.FC<FullSectionProps> = ({
 
     const meetingRoomStyle = hasMeetingRoom === 'left'
         ? { gridColumn: '1 / 3', gridRow: '1 / 3' }
-        : { gridColumn: '3 / 5', gridRow: '1 / 3' };
+        : hasMeetingRoom === 'right'
+            ? { gridColumn: '3 / 5', gridRow: '1 / 3' }
+            : hasMeetingRoom === 'bottom'
+                ? { gridColumn: '1 / 5', gridRow: '3 / 6' }
+                : {};
 
     return (
         <div

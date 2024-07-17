@@ -4,7 +4,7 @@ import FullSection from './Sections/FullSection';
 import EmptyHalfSection from './Sections/EmptyHalfSection';
 import EmptyFullSection from './Sections/EmptyFullSection';
 import HalfSection from './Sections/HalfSection';
-import BossOffice from './Sections/BossOfficeHalf';
+// import BossOffice from './Sections/BossOfficeHalf';
 import styles from './SeatingMap.module.scss';
 import {matchUsersWithExcelData} from './Sections/FetchUserData';
 import * as MicrosoftGraph from '@microsoft/microsoft-graph-types';
@@ -24,6 +24,7 @@ interface SectionConfig {
     bossRoom: boolean;
     highlightedColumns: { column: number; rows: number[] }[];
 }
+
 
 interface UserWithSeat extends MicrosoftGraph.User {
     seat?: string;
@@ -50,7 +51,6 @@ const SeatingMap: React.FunctionComponent<ISeatingMapProps> = (props: ISeatingMa
                 const matchedUsers = await matchUsersWithExcelData(graphClient);
                 setUsers(matchedUsers);
                 console.log('Matched users:', matchedUsers);
-
             } catch (error) {
                 console.error("Error fetching data:", error);
             }
@@ -111,19 +111,49 @@ const SeatingMap: React.FunctionComponent<ISeatingMapProps> = (props: ISeatingMa
         },
         {
             section: 8,
-            hasMeetingRoom: 'left',
+            hasMeetingRoom: 'false',
             desksPerColumn: [2, 2],
             bossRoom: false,
             highlightedColumns: [],
         },
+        {
+            section: 9,
+            hasMeetingRoom: 'false',
+            desksPerColumn: [0, 0],
+            bossRoom: true,
+            highlightedColumns: [],
+        },
+        {
+            section: 10,
+            hasMeetingRoom: 'false',
+            desksPerColumn: [0, 0],
+            bossRoom: true,
+            highlightedColumns: [],
+        },
+        {
+            section: 11,
+            hasMeetingRoom: 'false',
+            desksPerColumn: [0, 0],
+            bossRoom: true,
+            highlightedColumns: [],
+        },
+        {
+            section: 12,
+            hasMeetingRoom: 'false',
+            desksPerColumn: [1],
+            bossRoom: true,
+            highlightedColumns: [],
+        },
+        {
+            section: 13,
+            hasMeetingRoom: 'bottom',
+            desksPerColumn: [0, 0, 2],
+            bossRoom: false,
+            highlightedColumns: [],
+        },
+
+
     ];
-
-    const totalDesksPerSection = sectionsConfig.map((config) => ({
-        section: config.section,
-        totalDesks: config.desksPerColumn.reduce((sum, desks) => sum + desks, 0) + 2,
-    }));
-
-    const sectionToRender = sectionsConfig[7];
 
     React.useEffect(() => {
         console.log('Users state updated:', users);
@@ -140,40 +170,41 @@ const SeatingMap: React.FunctionComponent<ISeatingMapProps> = (props: ISeatingMa
                 <EmptyHalfSection text="Bathrooms"/>
                 <EmptyFullSection text="Staircase"/>
                 <HalfSection
-                    {...sectionToRender}
+                    {...sectionsConfig[7]}
                     employeeDesk={employeeDesk}
                     users={users}
                     onDeskClick={handleDeskClick}
                 />
-                <BossOffice
-                    section={2}
-                    totalDesks={totalDesksPerSection[1].totalDesks}
+                <HalfSection
+                    {...sectionsConfig[8]} // Use section 9 with custom boss desk position
                     employeeDesk={employeeDesk}
-                    highlightColor="red"
+                    users={users}
+                    onDeskClick={handleDeskClick}
                 />
                 <EmptyFullSection text="Elevators"/>
-                <BossOffice
-                    section={3}
-                    totalDesks={totalDesksPerSection[2].totalDesks}
+                <HalfSection
+                    {...sectionsConfig[9]}
                     employeeDesk={employeeDesk}
-                    highlightColor="red"
+                    users={users}
+                    onDeskClick={handleDeskClick}
                 />
-                <BossOffice
-                    section={4}
-                    totalDesks={totalDesksPerSection[3].totalDesks}
+                <HalfSection
+                    {...sectionsConfig[10]}
                     employeeDesk={employeeDesk}
-                    highlightColor="red"
+                    users={users}
+                    onDeskClick={handleDeskClick}
                 />
                 <EmptyFullSection text="Staircase"/>
                 <EmptyHalfSection text="Womans Bathroom"/>
                 <EmptyFullSection text="Cleaning room and staircase"/>
                 <EmptyFullSection text="Taken space"/>
                 <EmptyFullSection text="Elevators"/>
-                <BossOffice
-                    section={6}
-                    totalDesks={totalDesksPerSection[6].totalDesks}
+                <HalfSection
+                    {...sectionsConfig[11]}
                     employeeDesk={employeeDesk}
-                    highlightColor="red"
+                    users={users}
+                    onDeskClick={handleDeskClick}
+                    bossDeskPosition={{gridRow: 2, gridColumn: '1 / span 2'}}
                 />
                 <EmptyHalfSection text="Wardrobe"/>
             </div>
@@ -181,8 +212,6 @@ const SeatingMap: React.FunctionComponent<ISeatingMapProps> = (props: ISeatingMa
             <div style={{height: '10%'}}></div>
 
             <div className={styles.sectionsContainer}>
-
-
                 <EmptyHalfSection text="Free Zone"/>
                 {sectionsConfig.slice(0, 5).map((config, index) => (
                     <FullSection
@@ -195,7 +224,13 @@ const SeatingMap: React.FunctionComponent<ISeatingMapProps> = (props: ISeatingMa
                 ))}
                 <EmptyHalfSection text="Kitchen"/>
                 <EmptyFullSection/>
-                <EmptyFullSection/>
+                <FullSection
+                    key={`section-${sectionsConfig[12].section}`}
+                    {...sectionsConfig[12]}
+                    employeeDesk={employeeDesk}
+                    users={users}
+                    onDeskClick={handleDeskClick}
+                />
                 {sectionsConfig.slice(5, 7).map((config, index) => (
                     <FullSection
                         key={`section-${config.section}`}
@@ -215,14 +250,11 @@ const SeatingMap: React.FunctionComponent<ISeatingMapProps> = (props: ISeatingMa
                     title: 'User Details',
                 }}
             >
-                {selectedUser && (
+                {selectedUser ? (
                     <div>
-                        <p>Display Name: {selectedUser.displayName}</p>
-                        <p>Department: {selectedUser.department}</p>
                         <img
                             src={`https://eneraseg.sharepoint.com/sites/UZMTO2/foto_employees/${selectedUser.mail?.replace('@uzmto.com', '')}/profile.jpg` || NoUserPhotoUrl}
                             alt="User Photo"
-                            onClick={() => (window.location.href = `https://eneraseg.sharepoint.com/sites/UZMTO2/SitePages/profile-page.aspx?userId=${selectedUser.id}`)}
                             onError={(e) => {
                                 e.currentTarget.src = NoUserPhotoUrl;
                                 e.currentTarget.style.borderRadius = '10px';
@@ -237,16 +269,26 @@ const SeatingMap: React.FunctionComponent<ISeatingMapProps> = (props: ISeatingMa
                                 borderRadius: '10px'
                             }}
                         />
+
+                        <p>Display Name: {selectedUser.displayName}</p>
+                        <p>Department: {selectedUser.department}</p>
                     </div>
+                ) : (
+                    <p>No user found for this seat.</p>
                 )}
                 <DialogFooter>
                     <DefaultButton onClick={() => setIsDialogHidden(true)} text="Close"/>
+
+                    {selectedUser && typeof selectedUser.id === 'string' && selectedUser.id.length > 0 && (
+                        <DefaultButton
+                            href={`https://eneraseg.sharepoint.com/sites/UZMTO2/SitePages/profile-page.aspx?userId=${selectedUser.id}`}
+                            text="See Profile"
+                        />
+                    )}
+
                 </DialogFooter>
             </Dialog>
-
         </div>
-
-
     );
 };
 
