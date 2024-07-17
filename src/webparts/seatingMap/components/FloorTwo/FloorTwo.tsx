@@ -1,11 +1,10 @@
-// Floor2.tsx
 import * as React from 'react';
 import FullSection from "../Sections/FullSection";
 import EmptyHalfSection from "../Sections/EmptyHalfSection";
 import EmptyFullSection from "../Sections/EmptyFullSection";
 import HalfSection from "../Sections/HalfSection";
 import styles from "../SeatingMap.module.scss";
-import {UserWithSeat} from "../ISeatingMapProps";
+import { UserWithSeat } from "../ISeatingMapProps";
 
 interface EmployeeDesk {
     employeeKey: string;
@@ -25,14 +24,15 @@ interface FloorProps {
     employeeDesk: EmployeeDesk;
     users: UserWithSeat[];
     onDeskClick: (user: UserWithSeat | undefined) => void;
+    selectedFloor: number; // Add selectedFloor prop
 }
 
-const FloorTwo: React.FC<FloorProps> = ({ sectionsConfig, employeeDesk, users, onDeskClick }) => {
+const FloorTwo: React.FC<FloorProps> = ({ sectionsConfig, employeeDesk, users, onDeskClick, selectedFloor }) => {
     return (
         <div className={styles.mainContainer}>
             <div className={styles.topSectionsCont}>
-                <EmptyFullSection text="Bathroom"/>
-                <EmptyFullSection text="Staircase"/>
+                <EmptyFullSection text="Bathroom" />
+                <EmptyFullSection text="Staircase" />
                 <HalfSection
                     {...sectionsConfig[20]}
                     employeeDesk={employeeDesk}
@@ -45,7 +45,7 @@ const FloorTwo: React.FC<FloorProps> = ({ sectionsConfig, employeeDesk, users, o
                     users={users}
                     onDeskClick={onDeskClick}
                 />
-                <EmptyFullSection text="Elevators"/>
+                <EmptyFullSection text="Elevators" />
                 <HalfSection
                     {...sectionsConfig[22]}
                     employeeDesk={employeeDesk}
@@ -58,16 +58,15 @@ const FloorTwo: React.FC<FloorProps> = ({ sectionsConfig, employeeDesk, users, o
                     users={users}
                     onDeskClick={onDeskClick}
                 />
-                <EmptyFullSection text="Staircase"/>
-                <EmptyHalfSection text="Womans Bathroom"/>
-
+                <EmptyFullSection text="Staircase" />
+                <EmptyHalfSection text="Womans Bathroom" />
             </div>
 
-            <div style={{height: '10%'}}></div>
+            <div style={{ height: '10%' }}></div>
 
             <div className={styles.sectionsContainer}>
-                <EmptyHalfSection text="Kitchen"/>
-                <EmptyHalfSection text="Kitchen"/>
+                <EmptyHalfSection text="Kitchen" />
+                <EmptyHalfSection text="Kitchen" />
                 {sectionsConfig.slice(14, 19).map((config, index) => (
                     <FullSection
                         key={`section-${config.section}`}
@@ -75,10 +74,10 @@ const FloorTwo: React.FC<FloorProps> = ({ sectionsConfig, employeeDesk, users, o
                         employeeDesk={employeeDesk}
                         users={users}
                         onDeskClick={onDeskClick}
+                        selectedFloor={selectedFloor} // Pass selectedFloor
                     />
                 ))}
-                <EmptyHalfSection text="Kitchen"/>
-
+                <EmptyHalfSection text="Kitchen" />
             </div>
         </div>
     );

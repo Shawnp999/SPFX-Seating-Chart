@@ -1,5 +1,3 @@
-// src/webparts/SeatingMap/components/Sections/FullSection.tsx
-
 import * as React from 'react';
 import departmentColors from '../Utilities/DepartmentColors';
 import styles from '../SeatingMap.module.scss';
@@ -24,8 +22,8 @@ interface FullSectionProps {
     highlightedColumns: HighlightedColumn[];
     users: ImportedUserWithSeat[];
     onDeskClick: (user: ImportedUserWithSeat | undefined) => void;
+    selectedFloor: number; // Add selectedFloor prop
     bossDeskPosition?: { gridRow: number; gridColumn: string };
-
 }
 
 const FullSection: React.FC<FullSectionProps> = ({
@@ -37,20 +35,16 @@ const FullSection: React.FC<FullSectionProps> = ({
                                                      highlightedColumns,
                                                      users,
                                                      onDeskClick,
+                                                     selectedFloor, // Destructure selectedFloor
                                                      bossDeskPosition
                                                  }) => {
-
-
 
     const { employeeKey, employeeDep } = employeeDesk;
     const borderColor = departmentColors[section] || 'darkgoldenrod';
     const highlightColor = `${borderColor}`;
 
-
     const desks = [];
     let deskCounter = 1;
-
-
 
     const meetingRoomColumns = hasMeetingRoom === 'left' ? [0, 1] : hasMeetingRoom === 'right' ? [2, 3] : [];
 
@@ -71,10 +65,14 @@ const FullSection: React.FC<FullSectionProps> = ({
 
             const deskClass = col === 0 || col === 2 ? styles.deskOdd : styles.deskEven;
 
+            const className = selectedFloor === 2
+                ? `${styles.desk} ${styles.deskFloorTwo} ${isHighlighted ? styles.highlightedDesk : ''}`
+                : `${styles.desk} ${deskClass} ${isHighlighted ? styles.highlightedDesk : ''}`;
+
             desks.push(
                 <div
                     key={`${col}-${row}`}
-                    className={`${styles.desk} ${deskClass} ${isHighlighted ? styles.highlightedDesk : ''}`}
+                    className={className}
                     style={{ gridRow: row + 1, gridColumn: col + 1 }}
                     onClick={() => {
                         console.log('Desk clicked');

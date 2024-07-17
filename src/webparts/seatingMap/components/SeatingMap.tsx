@@ -7,7 +7,7 @@ import * as MicrosoftGraph from '@microsoft/microsoft-graph-types';
 import { Dialog, DialogType, DialogFooter } from '@fluentui/react/lib/Dialog';
 import { DefaultButton, PrimaryButton } from '@fluentui/react/lib/Button';
 import { useState } from 'react';
-import { sectionsConfig } from './Utilities/sectionsConfig'; // Import the config
+import { sectionsConfig } from './Utilities/sectionsConfig';
 
 interface EmployeeDesk {
     employeeKey: string;
@@ -36,7 +36,6 @@ const SeatingMap: React.FunctionComponent<ISeatingMapProps> = (props: ISeatingMa
         const fetchData = async () => {
             try {
                 const graphClient = await props.context.msGraphClientFactory.getClient('3');
-
                 const matchedUsers = await matchUsersWithExcelData(graphClient);
                 setUsers(matchedUsers);
                 console.log('Matched users:', matchedUsers);
@@ -70,6 +69,7 @@ const SeatingMap: React.FunctionComponent<ISeatingMapProps> = (props: ISeatingMa
                     employeeDesk={employeeDesk}
                     users={users}
                     onDeskClick={handleDeskClick}
+                    selectedFloor={selectedFloor}
                 />
             )}
 
@@ -79,6 +79,7 @@ const SeatingMap: React.FunctionComponent<ISeatingMapProps> = (props: ISeatingMa
                     employeeDesk={employeeDesk}
                     users={users}
                     onDeskClick={handleDeskClick}
+                    selectedFloor={selectedFloor}
                 />
             )}
 
