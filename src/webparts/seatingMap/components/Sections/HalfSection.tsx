@@ -42,8 +42,19 @@ const HalfSection: React.FC<HalfSectionProps> = ({
     const borderColor = departmentColors[section] || 'darkgoldenrod';
     const highlightColor = `${borderColor}`;
 
+    const deskRefs = React.useRef<(HTMLDivElement | null)[]>([]);
     const renderedDesks: JSX.Element[] = [];
     let deskCounter = 1;
+
+    React.useEffect(() => {
+        if (highlightedUserId) {
+            const highlightedDesk = deskRefs.current.find(
+                (deskRef, index) =>
+                    deskRef && users.find(user => user.id === highlightedUserId)?.seat === (index + 1).toString()
+            );
+            highlightedDesk?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+    }, [highlightedUserId]);
 
     desks.forEach(({ column, rows }) => {
         rows.forEach(row => {
@@ -56,6 +67,9 @@ const HalfSection: React.FC<HalfSectionProps> = ({
             renderedDesks.push(
                 <div
                     key={`${column}-${row}`}
+                    ref={el => {
+                        deskRefs.current[deskCounter - 1] = el;
+                    }}
                     className={`${styles.deskHalf} ${deskClass} ${isHighlighted ? styles.highlightedDesk : ''} ${isHighlightedUser ? styles.highlightedDesk : ''}`}
                     style={{ gridRow: row, gridColumn: column }}
                     onClick={() => {
@@ -88,6 +102,9 @@ const HalfSection: React.FC<HalfSectionProps> = ({
         renderedDesks.push(
             <div
                 key={`boss-desk`}
+                ref={el => {
+                    deskRefs.current[deskCounter - 1] = el;
+                }}
                 className={`${styles.deskHalf} ${styles.largeDesk} ${isHighlighted ? styles.highlightedDesk : ''} ${isHighlightedUser ? styles.highlightedDesk : ''}`}
                 style={bossDeskPosition || { gridRow: 2, gridColumn: '1 / span 2' }}
                 onClick={() => {

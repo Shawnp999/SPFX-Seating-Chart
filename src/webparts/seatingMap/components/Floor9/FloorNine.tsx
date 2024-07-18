@@ -26,12 +26,25 @@ interface FloorProps {
     onDeskClick: (user: UserWithSeat | undefined) => void;
     selectedFloor: number;
     highlightedUserId: string | null;
-
 }
 
 const FloorNine: React.FC<FloorProps> = ({ sectionsConfig, employeeDesk, users, onDeskClick, selectedFloor, highlightedUserId }) => {
+    const containerRef = React.useRef<HTMLDivElement | null>(null);
+
+    React.useEffect(() => {
+        if (highlightedUserId && containerRef.current) {
+            const highlightedUser = users.find(user => user.id === highlightedUserId);
+            if (highlightedUser) {
+                const highlightedDesk = containerRef.current.querySelector(`[data-testid="desk-${highlightedUser.section}-${highlightedUser.seat}"]`);
+                if (highlightedDesk) {
+                    (highlightedDesk as HTMLElement).scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+            }
+        }
+    }, [highlightedUserId, users]);
+
     return (
-        <div className={styles.mainContainer}>
+        <div className={styles.mainContainer} ref={containerRef}>
             <div className={styles.topSectionsCont}>
                 <EmptyHalfSection text="Bathrooms" />
                 <EmptyFullSection text="Staircase" />
