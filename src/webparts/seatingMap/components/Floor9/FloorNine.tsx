@@ -14,7 +14,7 @@ interface EmployeeDesk {
 interface SectionConfig {
     section: number;
     hasMeetingRoom: string | boolean;
-    desksPerColumn: number[];
+    desks: { column: number; rows: number[] }[];
     bossRoom: boolean;
     highlightedColumns: { column: number; rows: number[] }[];
 }
@@ -24,7 +24,7 @@ interface FloorProps {
     employeeDesk: EmployeeDesk;
     users: UserWithSeat[];
     onDeskClick: (user: UserWithSeat | undefined) => void;
-    selectedFloor: number; // Add selectedFloor prop
+    selectedFloor: number;
 }
 
 const FloorNine: React.FC<FloorProps> = ({ sectionsConfig, employeeDesk, users, onDeskClick, selectedFloor }) => {
@@ -84,7 +84,7 @@ const FloorNine: React.FC<FloorProps> = ({ sectionsConfig, employeeDesk, users, 
                         employeeDesk={employeeDesk}
                         users={users}
                         onDeskClick={onDeskClick}
-                        selectedFloor={selectedFloor} // Pass selectedFloor
+                        selectedFloor={selectedFloor}
                     />
                 ))}
                 <EmptyHalfSection text="Kitchen" />
@@ -94,7 +94,7 @@ const FloorNine: React.FC<FloorProps> = ({ sectionsConfig, employeeDesk, users, 
                     employeeDesk={employeeDesk}
                     users={users}
                     onDeskClick={onDeskClick}
-                    selectedFloor={selectedFloor} // Pass selectedFloor
+                    selectedFloor={selectedFloor}
                     bossDeskPosition={{ gridRow: 1, gridColumn: '1 / span 3' }}
                 />
                 <FullSection
@@ -103,7 +103,7 @@ const FloorNine: React.FC<FloorProps> = ({ sectionsConfig, employeeDesk, users, 
                     employeeDesk={employeeDesk}
                     users={users}
                     onDeskClick={onDeskClick}
-                    selectedFloor={selectedFloor} // Pass selectedFloor
+                    selectedFloor={selectedFloor}
                 />
                 {sectionsConfig.slice(5, 7).map((config, index) => (
                     <FullSection
@@ -112,7 +112,7 @@ const FloorNine: React.FC<FloorProps> = ({ sectionsConfig, employeeDesk, users, 
                         employeeDesk={employeeDesk}
                         users={users}
                         onDeskClick={onDeskClick}
-                        selectedFloor={selectedFloor} // Pass selectedFloor
+                        selectedFloor={selectedFloor}
                     />
                 ))}
             </div>

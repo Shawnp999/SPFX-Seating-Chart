@@ -16,19 +16,19 @@ interface HighlightedColumn {
 interface HalfSectionProps {
     section: number;
     hasMeetingRoom: string | boolean;
-    desksPerColumn: number[];
+    desks: { column: number; rows: number[] }[];
     employeeDesk: EmployeeDesk;
     highlightedColumns: HighlightedColumn[];
     users: ImportedUserWithSeat[];
     onDeskClick: (user: ImportedUserWithSeat | undefined) => void;
     bossRoom: boolean;
-    bossDeskPosition?: { gridRow: number; gridColumn: string }; // Optional
+    bossDeskPosition?: { gridRow: number; gridColumn: string };
 }
 
 const HalfSection: React.FC<HalfSectionProps> = ({
                                                      section,
                                                      hasMeetingRoom,
-                                                     desksPerColumn,
+                                                     desks,
                                                      employeeDesk,
                                                      highlightedColumns,
                                                      users,
@@ -40,23 +40,21 @@ const HalfSection: React.FC<HalfSectionProps> = ({
     const borderColor = departmentColors[section] || 'darkgoldenrod';
     const highlightColor = `${borderColor}`;
 
-    const desks: JSX.Element[] = [];
+    const renderedDesks: JSX.Element[] = [];
     let deskCounter = 1;
 
-    for (let col = 0; col < 2; col++) {
-        let startRow = 0;
-        let columnDesks = desksPerColumn[col];
-
-        for (let row = startRow; row < startRow + columnDesks; row++) {
+    desks.forEach(({ column, rows }) => {
+        rows.forEach(row => {
             const isHighlighted = section === parseInt(employeeDep) && deskCounter === parseInt(employeeKey);
             const assignedUser = users.find(user => user.section === section.toString() && user.seat === deskCounter.toString());
-            const deskClass = col % 2 === 0 ? styles.deskOdd : styles.deskEven;
 
-            desks.push(
+            const deskClass = column % 2 === 0 ? styles.deskEven : styles.deskOdd;
+
+            renderedDesks.push(
                 <div
-                    key={`${col}-${row}`}
+                    key={`${column}-${row}`}
                     className={`${styles.deskHalf} ${deskClass} ${isHighlighted ? styles.highlightedDesk : ''}`}
-                    style={{ gridRow: row + 1, gridColumn: col + 1 }}
+                    style={{ gridRow: row, gridColumn: column }}
                     onClick={() => {
                         console.log('Desk clicked');
                         console.log('Assigned user:', assignedUser);
@@ -76,14 +74,14 @@ const HalfSection: React.FC<HalfSectionProps> = ({
             );
 
             deskCounter++;
-        }
-    }
+        });
+    });
 
     if (bossRoom) {
         const isHighlighted = section === parseInt(employeeDep) && deskCounter === parseInt(employeeKey);
         const assignedUser = users.find(user => user.section === section.toString() && user.seat === deskCounter.toString());
 
-        desks.push(
+        renderedDesks.push(
             <div
                 key={`boss-desk`}
                 className={`${styles.deskHalf} ${styles.largeDesk} ${isHighlighted ? styles.highlightedDesk : ''}`}
@@ -112,7 +110,7 @@ const HalfSection: React.FC<HalfSectionProps> = ({
     return (
         <div className={styles.halfSection} style={{ maxWidth: '150px', minWidth: '150px', height: '100%', border: '2px solid black' }}>
             <div className={styles.officeLayoutHalf}>
-                {desks}
+                {renderedDesks}
                 {highlightedColumns &&
                     highlightedColumns.map(({ column, rows }) =>
                         rows.map((row) => (

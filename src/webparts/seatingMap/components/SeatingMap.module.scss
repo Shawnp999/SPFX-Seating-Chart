@@ -117,6 +117,15 @@
   justify-self: start;
 }
 
+
+.deskTop {
+  align-self: end;
+}
+
+.deskBottom {
+  align-self: start;
+}
+
 .highlightedDesk {
   background-color: red;
 }
@@ -163,8 +172,6 @@
   position: relative;
   overflow:hidden;
 }
-
-
 
 .officeLayoutTwo {
   display: grid;
