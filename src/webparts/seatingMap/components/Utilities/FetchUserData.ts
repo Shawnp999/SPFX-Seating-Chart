@@ -67,7 +67,7 @@ const matchUsersWithExcelData = async (client: MSGraphClientV3): Promise<UserWit
         const response = await client
             .api('/users')
             .header('ConsistencyLevel', 'eventual')
-            .select('id,displayName,department,mail,userPrincipalName')
+            .select('id,displayName,department,mail,userPrincipalName,businessPhones')
             .filter("endsWith(mail, '@uzmto.com')")
             .count(true)
             .top(999)

@@ -112,6 +112,7 @@ const SeatingMap: React.FunctionComponent<ISeatingMapProps> = (props: ISeatingMa
                         />
                         <p>Display Name: {selectedUser.displayName}</p>
                         <p>Department: {selectedUser.department}</p>
+                        <p>Internal Number(s): {selectedUser.businessPhones}</p>
                     </div>
                 ) : (
                     <p>No user found for this seat.</p>
