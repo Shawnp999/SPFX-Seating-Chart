@@ -24,6 +24,7 @@ interface FullSectionProps {
     onDeskClick: (user: ImportedUserWithSeat | undefined) => void;
     selectedFloor: number;
     bossDeskPosition?: { gridRow: number; gridColumn: string };
+    highlightedUserId: string | null;
 }
 
 const FullSection: React.FC<FullSectionProps> = ({
@@ -36,7 +37,8 @@ const FullSection: React.FC<FullSectionProps> = ({
                                                      users,
                                                      onDeskClick,
                                                      selectedFloor,
-                                                     bossDeskPosition
+                                                     bossDeskPosition,
+                                                     highlightedUserId
                                                  }) => {
     const { employeeKey, employeeDep } = employeeDesk;
     const borderColor = departmentColors[section] || 'darkgoldenrod';
@@ -49,6 +51,7 @@ const FullSection: React.FC<FullSectionProps> = ({
         rows.forEach(row => {
             const isHighlighted = section === parseInt(employeeDep) && deskCounter === parseInt(employeeKey);
             const assignedUser = users.find(user => user.section === section.toString() && user.seat === deskCounter.toString());
+            const isHighlightedUser = assignedUser && highlightedUserId && assignedUser.id === highlightedUserId;
 
             const deskClass = selectedFloor === 2
                 ? row === 1
@@ -60,10 +63,9 @@ const FullSection: React.FC<FullSectionProps> = ({
 
             const deskClassNine = column % 2 === 0 ? styles.deskEven : styles.deskOdd;
 
-
             const className = selectedFloor === 2
-                ? `${styles.deskFloorTwo} ${deskClass} ${isHighlighted ? styles.highlightedDesk : ''}`
-                : `${styles.desk} ${deskClassNine} ${isHighlighted ? styles.highlightedDesk : ''}`;
+                ? `${styles.deskFloorTwo} ${deskClass} ${isHighlighted ? styles.highlightedDesk : ''} ${isHighlightedUser ? styles.highlightedDesk : ''}`
+                : `${styles.desk} ${deskClassNine} ${isHighlighted ? styles.highlightedDesk : ''} ${isHighlightedUser ? styles.highlightedDesk : ''}`;
 
             renderedDesks.push(
                 <div
@@ -127,11 +129,12 @@ const FullSection: React.FC<FullSectionProps> = ({
                         {[...Array(2)].map((_, i) => {
                             const isHighlighted = section === parseInt(employeeDep) && deskCounter === parseInt(employeeKey);
                             const assignedUser = users.find(user => user.section === section.toString() && user.seat === deskCounter.toString());
+                            const isHighlightedUser = assignedUser && highlightedUserId && assignedUser.id === highlightedUserId;
 
                             return (
                                 <div
                                     key={`boss-${i + 1}`}
-                                    className={`${styles.desk} ${styles.largeDesk} ${isHighlighted ? styles.highlightedDesk : ''}`}
+                                    className={`${styles.desk} ${styles.largeDesk} ${isHighlighted ? styles.highlightedDesk : ''} ${isHighlightedUser ? styles.highlightedDesk : ''}`}
                                     style={bossDeskPosition || { gridRow: 2, gridColumn: '1 / span 2' }}
                                     onClick={() => onDeskClick(assignedUser)}
                                     data-testid={`desk-${section}-boss-${i + 1}`}

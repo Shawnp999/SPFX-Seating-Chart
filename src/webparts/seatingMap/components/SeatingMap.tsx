@@ -6,8 +6,9 @@ import { matchUsersWithExcelData } from './Utilities/FetchUserData';
 import * as MicrosoftGraph from '@microsoft/microsoft-graph-types';
 import { Dialog, DialogType, DialogFooter } from '@fluentui/react/lib/Dialog';
 import { DefaultButton, PrimaryButton } from '@fluentui/react/lib/Button';
-import { useState } from 'react';
+import {useEffect, useState} from 'react';
 import { sectionsConfig } from './Utilities/sectionsConfig';
+import styles from './SeatingMap.module.scss'
 
 interface EmployeeDesk {
     employeeKey: string;
@@ -25,14 +26,23 @@ const SeatingMap: React.FunctionComponent<ISeatingMapProps> = (props: ISeatingMa
     const [users, setUsers] = React.useState<UserWithSeat[]>([]);
     const [selectedUser, setSelectedUser] = useState<UserWithSeat | undefined>(undefined);
     const [isDialogHidden, setIsDialogHidden] = useState(true);
-    const [selectedFloor, setSelectedFloor] = useState(1);
+    const [selectedFloor, setSelectedFloor] = useState(9);
+    const [highlightedUserId, setHighlightedUserId] = useState<string | null>(null);
 
     const employeeDesk: EmployeeDesk = {
-        employeeKey: '11',
-        employeeDep: '6',
+        employeeKey: '',
+        employeeDep: '',
     };
 
-    React.useEffect(() => {
+    useEffect(() => {
+        const params = new URLSearchParams(window.location.search);
+        const userId = params.get("userId");
+        if (userId) {
+            setHighlightedUserId(userId);
+        }
+    }, []);
+
+    useEffect(() => {
         const fetchData = async () => {
             try {
                 const graphClient = await props.context.msGraphClientFactory.getClient('3');
@@ -58,7 +68,7 @@ const SeatingMap: React.FunctionComponent<ISeatingMapProps> = (props: ISeatingMa
 
     return (
         <div>
-            <div>
+            <div className={styles.floorBtnCont}>
                 <PrimaryButton onClick={() => setSelectedFloor(9)} text="Floor 9" />
                 <PrimaryButton onClick={() => setSelectedFloor(2)} text="Floor 2" />
             </div>
@@ -70,6 +80,7 @@ const SeatingMap: React.FunctionComponent<ISeatingMapProps> = (props: ISeatingMa
                     users={users}
                     onDeskClick={handleDeskClick}
                     selectedFloor={selectedFloor}
+                    highlightedUserId={highlightedUserId}
                 />
             )}
 
@@ -80,6 +91,7 @@ const SeatingMap: React.FunctionComponent<ISeatingMapProps> = (props: ISeatingMa
                     users={users}
                     onDeskClick={handleDeskClick}
                     selectedFloor={selectedFloor}
+                    highlightedUserId={highlightedUserId}
                 />
             )}
 
