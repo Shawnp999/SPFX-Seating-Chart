@@ -1,4 +1,6 @@
+// src/components/SeatingMap.tsx
 import * as React from 'react';
+import { useState, useEffect } from 'react';
 import { ISeatingMapProps } from './ISeatingMapProps';
 import FloorNine from "./Floor9/FloorNine";
 import FloorTwo from "./FloorTwo/FloorTwo";
@@ -6,9 +8,9 @@ import { matchUsersWithExcelData } from './Utilities/FetchUserData';
 import * as MicrosoftGraph from '@microsoft/microsoft-graph-types';
 import { Dialog, DialogType, DialogFooter } from '@fluentui/react/lib/Dialog';
 import { DefaultButton, PrimaryButton } from '@fluentui/react/lib/Button';
-import {useEffect, useState} from 'react';
 import { sectionsConfig } from './Utilities/sectionsConfig';
-import styles from './SeatingMap.module.scss'
+import styles from './SeatingMap.module.scss';
+import { OrgStructure } from './Departments/Orgstructure';
 
 interface EmployeeDesk {
     employeeKey: string;
@@ -23,7 +25,7 @@ interface UserWithSeat extends MicrosoftGraph.User {
 const NoUserPhotoUrl = `https://eneraseg.sharepoint.com/sites/UZMTO2/foto_employees/NoPhoto/nophoto.jpg`;
 
 const SeatingMap: React.FunctionComponent<ISeatingMapProps> = (props: ISeatingMapProps) => {
-    const [users, setUsers] = React.useState<UserWithSeat[]>([]);
+    const [users, setUsers] = useState<UserWithSeat[]>([]);
     const [selectedUser, setSelectedUser] = useState<UserWithSeat | undefined>(undefined);
     const [isDialogHidden, setIsDialogHidden] = useState(true);
     const [selectedFloor, setSelectedFloor] = useState(9);
@@ -33,6 +35,15 @@ const SeatingMap: React.FunctionComponent<ISeatingMapProps> = (props: ISeatingMa
         employeeKey: '',
         employeeDep: '',
     };
+
+    const orgStructure = new OrgStructure();
+    orgStructure.init();
+
+    const orgStructureMap: Map<string, string> = new Map();
+
+    orgStructure.departments.forEach(dep => {
+        orgStructureMap.set(dep.departmentAAD, dep.departmentName);
+    });
 
     useEffect(() => {
         const params = new URLSearchParams(window.location.search);
@@ -57,9 +68,33 @@ const SeatingMap: React.FunctionComponent<ISeatingMapProps> = (props: ISeatingMa
         fetchData().catch(error => console.error("Unhandled error in fetchData:", error));
     }, []);
 
-    React.useEffect(() => {
+    useEffect(() => {
         console.log('Users state updated:', users);
     }, [users]);
+
+    const correctUserDepartmentName = (incorrectDepartmentName: MicrosoftGraph.NullableOption<string> | undefined): string => {
+        if (incorrectDepartmentName === null || incorrectDepartmentName === undefined) {
+            return 'No department';
+        }
+
+        const departmentValue = incorrectDepartmentName as string;
+
+        if (departmentValue === null) {
+            return 'No department';
+        }
+
+        const correctDepartment = orgStructure.departments.find(dep => dep.departmentAAD === departmentValue);
+
+        if (correctDepartment === undefined) {
+            return departmentValue;
+        }
+
+        return correctDepartment.departmentName;
+    };
+
+    users.forEach(user => {
+        user.department = correctUserDepartmentName(user.department || undefined);
+    });
 
     const handleDeskClick = (user: UserWithSeat | undefined) => {
         setSelectedUser(user);
