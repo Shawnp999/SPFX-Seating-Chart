@@ -3,10 +3,7 @@ import departmentColors from '../Utilities/DepartmentColors';
 import styles from '../SeatingMap.module.scss';
 import { UserWithSeat as ImportedUserWithSeat } from '../Utilities/FetchUserData';
 
-interface EmployeeDesk {
-    employeeKey: string;
-    employeeDep: string;
-}
+
 
 interface HighlightedColumn {
     column: number;
@@ -17,7 +14,6 @@ interface HalfSectionProps {
     section: number;
     hasMeetingRoom: string | boolean;
     desks: { column: number; rows: number[] }[];
-    employeeDesk: EmployeeDesk;
     highlightedColumns: HighlightedColumn[];
     users: ImportedUserWithSeat[];
     onDeskClick: (user: ImportedUserWithSeat | undefined) => void;
@@ -30,7 +26,6 @@ const HalfSection: React.FC<HalfSectionProps> = ({
                                                      section,
                                                      hasMeetingRoom,
                                                      desks,
-                                                     employeeDesk,
                                                      highlightedColumns,
                                                      users,
                                                      onDeskClick,
@@ -38,7 +33,6 @@ const HalfSection: React.FC<HalfSectionProps> = ({
                                                      bossDeskPosition,
                                                      highlightedUserId
                                                  }) => {
-    const { employeeKey, employeeDep } = employeeDesk;
     const borderColor = departmentColors[section] || 'darkgoldenrod';
     const highlightColor = `${borderColor}`;
 
@@ -58,7 +52,6 @@ const HalfSection: React.FC<HalfSectionProps> = ({
 
     desks.forEach(({ column, rows }) => {
         rows.forEach(row => {
-            const isHighlighted = section === parseInt(employeeDep) && deskCounter === parseInt(employeeKey);
             const assignedUser = users.find(user => user.section === section.toString() && user.seat === deskCounter.toString());
             const isHighlightedUser = assignedUser && highlightedUserId && assignedUser.id === highlightedUserId;
 
@@ -70,7 +63,7 @@ const HalfSection: React.FC<HalfSectionProps> = ({
                     ref={el => {
                         deskRefs.current[deskCounter - 1] = el;
                     }}
-                    className={`${styles.deskHalf} ${deskClass} ${isHighlighted ? styles.highlightedDesk : ''} ${isHighlightedUser ? styles.highlightedDesk : ''}`}
+                    className={`${styles.deskHalf} ${deskClass}  ${isHighlightedUser ? styles.highlightedDesk : ''}`}
                     style={{ gridRow: row, gridColumn: column }}
                     onClick={() => {
                         console.log('Desk clicked');
@@ -95,7 +88,6 @@ const HalfSection: React.FC<HalfSectionProps> = ({
     });
 
     if (bossRoom) {
-        const isHighlighted = section === parseInt(employeeDep) && deskCounter === parseInt(employeeKey);
         const assignedUser = users.find(user => user.section === section.toString() && user.seat === deskCounter.toString());
         const isHighlightedUser = assignedUser && highlightedUserId && assignedUser.id === highlightedUserId;
 
@@ -105,7 +97,7 @@ const HalfSection: React.FC<HalfSectionProps> = ({
                 ref={el => {
                     deskRefs.current[deskCounter - 1] = el;
                 }}
-                className={`${styles.deskHalf} ${styles.largeDesk} ${isHighlighted ? styles.highlightedDesk : ''} ${isHighlightedUser ? styles.highlightedDesk : ''}`}
+                className={`${styles.deskHalf} ${styles.largeDesk}  ${isHighlightedUser ? styles.highlightedDesk : ''}`}
                 style={bossDeskPosition || { gridRow: 2, gridColumn: '1 / span 2' }}
                 onClick={() => {
                     console.log('Boss desk clicked');

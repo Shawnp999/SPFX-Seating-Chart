@@ -12,10 +12,6 @@ import { sectionsConfig } from './Utilities/sectionsConfig';
 import styles from './SeatingMap.module.scss';
 import { OrgStructure } from './Departments/Orgstructure';
 
-interface EmployeeDesk {
-    employeeKey: string;
-    employeeDep: string;
-}
 
 interface UserWithSeat extends MicrosoftGraph.User {
     seat?: string;
@@ -42,10 +38,7 @@ const SeatingMap: React.FunctionComponent<ISeatingMapProps> = (props: ISeatingMa
     const [selectedFloor, setSelectedFloor] = useState(9);
     const [highlightedUserId, setHighlightedUserId] = useState<string | null>(null);
 
-    const employeeDesk: EmployeeDesk = {
-        employeeKey: '',
-        employeeDep: '',
-    };
+
 
     const orgStructure = new OrgStructure();
     orgStructure.init();
@@ -133,7 +126,6 @@ const SeatingMap: React.FunctionComponent<ISeatingMapProps> = (props: ISeatingMa
             {selectedFloor === 9 && (
                 <FloorNine
                     sectionsConfig={sectionsConfig}
-                    employeeDesk={employeeDesk}
                     users={users}
                     onDeskClick={handleDeskClick}
                     selectedFloor={selectedFloor}
@@ -144,7 +136,6 @@ const SeatingMap: React.FunctionComponent<ISeatingMapProps> = (props: ISeatingMa
             {selectedFloor === 2 && (
                 <FloorTwo
                     sectionsConfig={sectionsConfig}
-                    employeeDesk={employeeDesk}
                     users={users}
                     onDeskClick={handleDeskClick}
                     selectedFloor={selectedFloor}

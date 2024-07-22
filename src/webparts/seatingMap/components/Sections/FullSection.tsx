@@ -4,10 +4,6 @@ import styles from '../SeatingMap.module.scss';
 import { UserWithSeat as ImportedUserWithSeat } from '../Utilities/FetchUserData';
 
 
-interface EmployeeDesk {
-    employeeKey: string;
-    employeeDep: string;
-}
 
 interface HighlightedColumn {
     column: number;
@@ -18,7 +14,6 @@ interface FullSectionProps {
     section: number;
     hasMeetingRoom: string | boolean;
     desks: { column: number; rows: number[] }[];
-    employeeDesk: EmployeeDesk;
     bossRoom: boolean;
     highlightedColumns: HighlightedColumn[];
     users: ImportedUserWithSeat[];
@@ -32,7 +27,6 @@ const FullSection: React.FC<FullSectionProps> = ({
                                                      section,
                                                      hasMeetingRoom,
                                                      desks,
-                                                     employeeDesk,
                                                      bossRoom,
                                                      highlightedColumns,
                                                      users,
@@ -41,7 +35,6 @@ const FullSection: React.FC<FullSectionProps> = ({
                                                      bossDeskPosition,
                                                      highlightedUserId
                                                  }) => {
-    const { employeeKey, employeeDep } = employeeDesk;
     const borderColor = departmentColors[section] || 'darkgoldenrod';
     const highlightColor = `${borderColor}`;
 
@@ -53,7 +46,6 @@ const FullSection: React.FC<FullSectionProps> = ({
 
     desks.forEach(({ column, rows }) => {
         rows.forEach(row => {
-            const isHighlighted = section === parseInt(employeeDep) && deskCounter === parseInt(employeeKey);
             const assignedUser = users.find(user => user.section === section.toString() && user.seat === deskCounter.toString());
             const isHighlightedUser = assignedUser && highlightedUserId && assignedUser.id === highlightedUserId;
 
@@ -68,8 +60,8 @@ const FullSection: React.FC<FullSectionProps> = ({
             const deskClassNine = column % 2 === 0 ? styles.deskEven : styles.deskOdd;
 
             const className = selectedFloor === 2
-                ? `${styles.deskFloorTwo} ${deskClass} ${isHighlighted ? styles.highlightedDesk : ''} ${isHighlightedUser ? styles.highlightedDesk : ''}`
-                : `${styles.desk} ${deskClassNine} ${isHighlighted ? styles.highlightedDesk : ''} ${isHighlightedUser ? styles.highlightedDesk : ''}`;
+                ? `${styles.deskFloorTwo} ${deskClass}  ${isHighlightedUser ? styles.highlightedDesk : ''}`
+                : `${styles.desk} ${deskClassNine}  ${isHighlightedUser ? styles.highlightedDesk : ''}`;
 
             renderedDesks.push(
                 <div
@@ -134,7 +126,6 @@ const FullSection: React.FC<FullSectionProps> = ({
                         }}
                     >
                         {[...Array(2)].map((_, i) => {
-                            const isHighlighted = section === parseInt(employeeDep) && deskCounter === parseInt(employeeKey);
                             const assignedUser = users.find(user => user.section === section.toString() && user.seat === deskCounter.toString());
                             const isHighlightedUser = assignedUser && highlightedUserId && assignedUser.id === highlightedUserId;
 
@@ -144,7 +135,7 @@ const FullSection: React.FC<FullSectionProps> = ({
                                     ref={el => {
                                         deskRefs.current[deskCounter - 1] = el;
                                     }}
-                                    className={`${styles.desk} ${styles.largeDesk} ${isHighlighted ? styles.highlightedDesk : ''} ${isHighlightedUser ? styles.highlightedDesk : ''}`}
+                                    className={`${styles.desk} ${styles.largeDesk}  ${isHighlightedUser ? styles.highlightedDesk : ''}`}
                                     style={bossDeskPosition || { gridRow: 2, gridColumn: '1 / span 2' }}
                                     onClick={() => onDeskClick(assignedUser)}
                                     data-testid={`desk-${section}-boss-${i + 1}`}
