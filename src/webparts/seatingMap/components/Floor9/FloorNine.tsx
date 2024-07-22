@@ -5,6 +5,7 @@ import EmptyFullSection from "../Sections/EmptyFullSection";
 import HalfSection from "../Sections/HalfSection";
 import styles from "../SeatingMap.module.scss";
 import { UserWithSeat } from "../ISeatingMapProps";
+import {useEffect} from "react";
 
 interface EmployeeDesk {
     employeeKey: string;
@@ -31,7 +32,7 @@ interface FloorProps {
 const FloorNine: React.FC<FloorProps> = ({ sectionsConfig, employeeDesk, users, onDeskClick, selectedFloor, highlightedUserId }) => {
     const containerRef = React.useRef<HTMLDivElement | null>(null);
 
-    React.useEffect(() => {
+    useEffect(() => {
         if (highlightedUserId && containerRef.current) {
             const highlightedUser = users.find(user => user.id === highlightedUserId);
             if (highlightedUser) {

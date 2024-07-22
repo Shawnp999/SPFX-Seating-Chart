@@ -1,3 +1,4 @@
+// src/components/FloorTwo.tsx
 import * as React from 'react';
 import FullSection from "../Sections/FullSection";
 import EmptyHalfSection from "../Sections/EmptyHalfSection";
@@ -5,6 +6,7 @@ import EmptyFullSection from "../Sections/EmptyFullSection";
 import HalfSection from "../Sections/HalfSection";
 import styles from "../SeatingMap.module.scss";
 import { UserWithSeat } from "../ISeatingMapProps";
+import {useEffect} from "react";
 
 interface EmployeeDesk {
     employeeKey: string;
@@ -17,7 +19,6 @@ interface SectionConfig {
     desks: { column: number; rows: number[] }[];
     bossRoom: boolean;
     highlightedColumns: { column: number; rows: number[] }[];
-
 }
 
 interface FloorProps {
@@ -30,8 +31,22 @@ interface FloorProps {
 }
 
 const FloorTwo: React.FC<FloorProps> = ({ sectionsConfig, employeeDesk, users, onDeskClick, selectedFloor, highlightedUserId }) => {
+    const containerRef = React.useRef<HTMLDivElement | null>(null);
+
+    useEffect(() => {
+        if (highlightedUserId && containerRef.current) {
+            const highlightedUser = users.find(user => user.id === highlightedUserId);
+            if (highlightedUser) {
+                const highlightedDesk = containerRef.current.querySelector(`[data-testid="desk-${highlightedUser.section}-${highlightedUser.seat}"]`);
+                if (highlightedDesk) {
+                    (highlightedDesk as HTMLElement).scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+            }
+        }
+    }, [highlightedUserId, users]);
+
     return (
-        <div className={styles.mainContainer}>
+        <div className={styles.mainContainer} ref={containerRef}>
             <div className={styles.topSectionsCont}>
                 <EmptyFullSection text="Bathroom" />
                 <EmptyFullSection text="Staircase" />

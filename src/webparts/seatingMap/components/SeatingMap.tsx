@@ -56,15 +56,15 @@ const SeatingMap: React.FunctionComponent<ISeatingMapProps> = (props: ISeatingMa
         orgStructureMap.set(dep.departmentAAD, dep.departmentName);
     });
 
+
     useEffect(() => {
+
         const params = new URLSearchParams(window.location.search);
         const userId = params.get("userId");
         if (userId) {
             setHighlightedUserId(userId);
         }
-    }, []);
 
-    useEffect(() => {
         const fetchData = async () => {
             try {
                 const graphClient = await props.context.msGraphClientFactory.getClient('3');
@@ -84,6 +84,8 @@ const SeatingMap: React.FunctionComponent<ISeatingMapProps> = (props: ISeatingMa
                 console.error("Error fetching data:", error);
             }
         };
+
+
 
         fetchData().catch(error => console.error("Unhandled error in fetchData:", error));
     }, [highlightedUserId]);
@@ -117,11 +119,15 @@ const SeatingMap: React.FunctionComponent<ISeatingMapProps> = (props: ISeatingMa
         setIsDialogHidden(false);
     };
 
+    const getButtonClassName = (floor: number) => {
+        return selectedFloor === floor ? styles.selectedFloorButton : '';
+    };
+
     return (
         <div>
             <div className={styles.floorBtnCont}>
-                <PrimaryButton onClick={() => setSelectedFloor(9)} text="Floor 9" />
-                <PrimaryButton onClick={() => setSelectedFloor(2)} text="Floor 2" />
+                <PrimaryButton className={getButtonClassName(9)} onClick={() => setSelectedFloor(9)} text="Floor 9" />
+                <PrimaryButton className={getButtonClassName(2)} onClick={() => setSelectedFloor(2)} text="Floor 2" />
             </div>
 
             {selectedFloor === 9 && (

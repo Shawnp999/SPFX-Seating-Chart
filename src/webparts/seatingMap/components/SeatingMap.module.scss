@@ -190,8 +190,12 @@
 }
 
 highlightedUserDesk {
-  border: 3px solid #ff0000; // Red border for highlighted user's desk
-  box-shadow: 0 0 15px rgba(255, 0, 0, 0.7); // Red glow effect
+  border: 3px solid #ff0000;
+  box-shadow: 0 0 15px rgba(255, 0, 0, 0.7);
 }
 
+.selectedFloorButton {
+  background-color: #0894ff;
+  color: white;
+}
 

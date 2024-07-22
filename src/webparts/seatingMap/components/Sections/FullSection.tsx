@@ -3,6 +3,7 @@ import departmentColors from '../Utilities/DepartmentColors';
 import styles from '../SeatingMap.module.scss';
 import { UserWithSeat as ImportedUserWithSeat } from '../Utilities/FetchUserData';
 
+
 interface EmployeeDesk {
     employeeKey: string;
     employeeDep: string;
@@ -48,15 +49,7 @@ const FullSection: React.FC<FullSectionProps> = ({
     const renderedDesks: JSX.Element[] = [];
     let deskCounter = 1;
 
-    React.useEffect(() => {
-        if (highlightedUserId) {
-            const highlightedDesk = deskRefs.current.find(
-                (deskRef, index) =>
-                    deskRef && users.find(user => user.id === highlightedUserId)?.seat === (index + 1).toString()
-            );
-            highlightedDesk?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        }
-    }, [highlightedUserId, users]);
+
 
     desks.forEach(({ column, rows }) => {
         rows.forEach(row => {
