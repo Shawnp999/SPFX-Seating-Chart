@@ -24,6 +24,17 @@ interface UserWithSeat extends MicrosoftGraph.User {
 
 const NoUserPhotoUrl = `https://eneraseg.sharepoint.com/sites/UZMTO2/foto_employees/NoPhoto/nophoto.jpg`;
 
+const sectionToFloorMap = {
+    9: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14],
+    2: [15, 16, 17, 18, 19, 20, 21, 22, 23, 24]
+};
+
+const getFloorBySection = (section: number) => {
+    if (sectionToFloorMap[9].includes(section)) return 9;
+    if (sectionToFloorMap[2].includes(section)) return 2;
+    return 9; // Default to floor 9 if section is not found
+};
+
 const SeatingMap: React.FunctionComponent<ISeatingMapProps> = (props: ISeatingMapProps) => {
     const [users, setUsers] = useState<UserWithSeat[]>([]);
     const [selectedUser, setSelectedUser] = useState<UserWithSeat | undefined>(undefined);
@@ -60,17 +71,22 @@ const SeatingMap: React.FunctionComponent<ISeatingMapProps> = (props: ISeatingMa
                 const matchedUsers = await matchUsersWithExcelData(graphClient);
                 setUsers(matchedUsers);
                 console.log('Matched users:', matchedUsers);
+
+                if (highlightedUserId) {
+                    const user = matchedUsers.find(u => u.id === highlightedUserId);
+                    if (user && user.section) {
+                        const userSection = parseInt(user.section, 10);
+                        const floor = getFloorBySection(userSection);
+                        setSelectedFloor(floor);
+                    }
+                }
             } catch (error) {
                 console.error("Error fetching data:", error);
             }
         };
 
         fetchData().catch(error => console.error("Unhandled error in fetchData:", error));
-    }, []);
-
-    useEffect(() => {
-        console.log('Users state updated:', users);
-    }, [users]);
+    }, [highlightedUserId]);
 
     const correctUserDepartmentName = (incorrectDepartmentName: MicrosoftGraph.NullableOption<string> | undefined): string => {
         if (incorrectDepartmentName === null || incorrectDepartmentName === undefined) {
