@@ -28,7 +28,7 @@ const sectionToFloorMap = {
 const getFloorBySection = (section: number) => {
     if (sectionToFloorMap[9].includes(section)) return 9;
     if (sectionToFloorMap[2].includes(section)) return 2;
-    return 9; // Default to floor 9 if section is not found
+    return 9;
 };
 
 const SeatingMap: React.FunctionComponent<ISeatingMapProps> = (props: ISeatingMapProps) => {

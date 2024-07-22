@@ -1,21 +1,14 @@
 import * as React from 'react';
-import departmentColors from '../Utilities/DepartmentColors';
+//import departmentColors from '../Utilities/DepartmentColors';
 import styles from '../SeatingMap.module.scss';
 import { UserWithSeat as ImportedUserWithSeat } from '../Utilities/FetchUserData';
 
-
-
-interface HighlightedColumn {
-    column: number;
-    rows: number[];
-}
 
 interface FullSectionProps {
     section: number;
     hasMeetingRoom: string | boolean;
     desks: { column: number; rows: number[] }[];
     bossRoom: boolean;
-    highlightedColumns: HighlightedColumn[];
     users: ImportedUserWithSeat[];
     onDeskClick: (user: ImportedUserWithSeat | undefined) => void;
     selectedFloor: number;
@@ -28,15 +21,12 @@ const FullSection: React.FC<FullSectionProps> = ({
                                                      hasMeetingRoom,
                                                      desks,
                                                      bossRoom,
-                                                     highlightedColumns,
                                                      users,
                                                      onDeskClick,
                                                      selectedFloor,
                                                      bossDeskPosition,
                                                      highlightedUserId
                                                  }) => {
-    const borderColor = departmentColors[section] || 'darkgoldenrod';
-    const highlightColor = `${borderColor}`;
 
     const deskRefs = React.useRef<(HTMLDivElement | null)[]>([]);
     const renderedDesks: JSX.Element[] = [];
@@ -147,20 +137,6 @@ const FullSection: React.FC<FullSectionProps> = ({
                     </div>
                 )}
 
-                {highlightedColumns &&
-                    highlightedColumns.map(({ column, rows }) =>
-                        rows.map((row) => (
-                            <div
-                                key={`highlight-${column}-${row}`}
-                                style={{
-                                    gridColumn: `${column} / ${column + 1}`,
-                                    gridRow: `${row} / ${row + 1}`,
-                                    backgroundColor: highlightColor,
-                                    opacity: '0.2',
-                                }}
-                            ></div>
-                        ))
-                    )}
             </div>
         </div>
     );

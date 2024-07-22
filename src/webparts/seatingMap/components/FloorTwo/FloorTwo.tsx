@@ -15,7 +15,6 @@ interface SectionConfig {
     hasMeetingRoom: string | boolean;
     desks: { column: number; rows: number[] }[];
     bossRoom: boolean;
-    highlightedColumns: { column: number; rows: number[] }[];
 }
 
 interface FloorProps {

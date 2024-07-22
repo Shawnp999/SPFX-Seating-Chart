@@ -1,20 +1,14 @@
 import * as React from 'react';
-import departmentColors from '../Utilities/DepartmentColors';
+//import departmentColors from '../Utilities/DepartmentColors';
 import styles from '../SeatingMap.module.scss';
 import { UserWithSeat as ImportedUserWithSeat } from '../Utilities/FetchUserData';
 
 
 
-interface HighlightedColumn {
-    column: number;
-    rows: number[];
-}
-
 interface HalfSectionProps {
     section: number;
     hasMeetingRoom: string | boolean;
     desks: { column: number; rows: number[] }[];
-    highlightedColumns: HighlightedColumn[];
     users: ImportedUserWithSeat[];
     onDeskClick: (user: ImportedUserWithSeat | undefined) => void;
     bossRoom: boolean;
@@ -26,15 +20,12 @@ const HalfSection: React.FC<HalfSectionProps> = ({
                                                      section,
                                                      hasMeetingRoom,
                                                      desks,
-                                                     highlightedColumns,
                                                      users,
                                                      onDeskClick,
                                                      bossRoom,
                                                      bossDeskPosition,
                                                      highlightedUserId
                                                  }) => {
-    const borderColor = departmentColors[section] || 'darkgoldenrod';
-    const highlightColor = `${borderColor}`;
 
     const deskRefs = React.useRef<(HTMLDivElement | null)[]>([]);
     const renderedDesks: JSX.Element[] = [];
@@ -124,15 +115,6 @@ const HalfSection: React.FC<HalfSectionProps> = ({
         <div className={styles.halfSection} style={{ maxWidth: '150px', minWidth: '150px', height: '100%', border: '2px solid black' }}>
             <div className={styles.officeLayoutHalf}>
                 {renderedDesks}
-                {highlightedColumns &&
-                    highlightedColumns.map(({ column, rows }) =>
-                        rows.map((row) => (
-                            <div
-                                key={`highlight-${column}-${row}`}
-                                style={{ gridColumn: `${column} / ${column + 1}`, gridRow: `${row} / ${row + 1}`, backgroundColor: highlightColor, opacity: '0.2' }}
-                            ></div>
-                        ))
-                    )}
             </div>
         </div>
     );

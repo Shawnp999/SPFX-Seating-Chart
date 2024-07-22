@@ -3,7 +3,6 @@ export interface SectionConfigProps {
     hasMeetingRoom: string | boolean;
     desks: { column: number; rows: number[] }[];
     bossRoom: boolean;
-    highlightedColumns: { column: number; rows: number[] }[];
 }
 
 export const sectionsConfig: SectionConfigProps[] = [
@@ -17,7 +16,6 @@ export const sectionsConfig: SectionConfigProps[] = [
             { column: 4, rows: [1, 2, 3, 4, 5] },
         ],
         bossRoom: false,
-        highlightedColumns: [],
     },
     {
         section: 2,
@@ -29,7 +27,6 @@ export const sectionsConfig: SectionConfigProps[] = [
             { column: 4, rows: [1, 2, 3, 4, 5] },
         ],
         bossRoom: false,
-        highlightedColumns: [],
     },
     {
         section: 3,
@@ -41,7 +38,6 @@ export const sectionsConfig: SectionConfigProps[] = [
             { column: 4, rows: [1, 2, 3, 4, 5] },
         ],
         bossRoom: false,
-        highlightedColumns: [],
     },
     {
         section: 4,
@@ -53,7 +49,6 @@ export const sectionsConfig: SectionConfigProps[] = [
             { column: 4, rows: [1, 2, 3, 4, 5] },
         ],
         bossRoom: false,
-        highlightedColumns: [],
     },
     {
         section: 5,
@@ -65,7 +60,6 @@ export const sectionsConfig: SectionConfigProps[] = [
             { column: 4, rows: [1, 2, 3, 4, 5] },
         ],
         bossRoom: false,
-        highlightedColumns: [],
     },
     {
         section: 6,
@@ -77,7 +71,6 @@ export const sectionsConfig: SectionConfigProps[] = [
             { column: 4, rows: [3, 4] },
         ],
         bossRoom: true,
-        highlightedColumns: [],
     },
     {
         section: 7,
@@ -89,7 +82,6 @@ export const sectionsConfig: SectionConfigProps[] = [
             { column: 4, rows: [1, 2, 3, 4] },
         ],
         bossRoom: true,
-        highlightedColumns: [],
     },
     {
         section: 8,
@@ -99,28 +91,24 @@ export const sectionsConfig: SectionConfigProps[] = [
             { column: 2, rows: [2, 3] },
         ],
         bossRoom: false,
-        highlightedColumns: [],
     },
     {
         section: 9,
         hasMeetingRoom: 'false',
         desks: [],
         bossRoom: true,
-        highlightedColumns: [],
     },
     {
         section: 10,
         hasMeetingRoom: 'false',
         desks: [],
         bossRoom: true,
-        highlightedColumns: [],
     },
     {
         section: 11,
         hasMeetingRoom: 'false',
         desks: [],
         bossRoom: true,
-        highlightedColumns: [],
     },
     {
         section: 12,
@@ -129,7 +117,6 @@ export const sectionsConfig: SectionConfigProps[] = [
             { column: 1, rows: [3] },
         ],
         bossRoom: true,
-        highlightedColumns: [],
     },
     {
         section: 13,
@@ -138,14 +125,12 @@ export const sectionsConfig: SectionConfigProps[] = [
             { column: 3, rows: [1, 2] },
         ],
         bossRoom: false,
-        highlightedColumns: [],
     },
     {
         section: 14,
         hasMeetingRoom: false,
         desks: [],
         bossRoom: true,
-        highlightedColumns: [],
     },
     // Floor 2
     {
@@ -158,7 +143,6 @@ export const sectionsConfig: SectionConfigProps[] = [
             { column: 4, rows: [1, 2, 3, 4, 5] },
         ],
         bossRoom: false,
-        highlightedColumns: [],
     },
     {
         section: 16,
@@ -170,7 +154,6 @@ export const sectionsConfig: SectionConfigProps[] = [
             { column: 4, rows: [1, 2, 3, 4, 5] },
         ],
         bossRoom: false,
-        highlightedColumns: [],
     },
     {
         section: 17,
@@ -182,7 +165,6 @@ export const sectionsConfig: SectionConfigProps[] = [
             { column: 4, rows: [1, 2, 3, 4, 5] },
         ],
         bossRoom: false,
-        highlightedColumns: [],
     },
     {
         section: 18,
@@ -195,7 +177,6 @@ export const sectionsConfig: SectionConfigProps[] = [
             { column: 5, rows: [1, 2, 3, 4, 5] }
         ],
         bossRoom: false,
-        highlightedColumns: [],
     },
     {
         section: 19,
@@ -207,41 +188,35 @@ export const sectionsConfig: SectionConfigProps[] = [
             { column: 5, rows: [2, 3, 4, 5] },
         ],
         bossRoom: false,
-        highlightedColumns: [],
     },
     {
         section: 20,
         hasMeetingRoom: false,
         desks: [],
         bossRoom: true,
-        highlightedColumns: [],
     },
     {
         section: 21,
         hasMeetingRoom: false,
         desks: [],
         bossRoom: true,
-        highlightedColumns: [],
     },
     {
         section: 22,
         hasMeetingRoom: false,
         desks: [],
         bossRoom: true,
-        highlightedColumns: [],
     },
     {
         section: 23,
         hasMeetingRoom: false,
         desks: [],
         bossRoom: true,
-        highlightedColumns: [],
     },
     {
         section: 24,
         hasMeetingRoom: false,
         desks: [],
         bossRoom: true,
-        highlightedColumns: [],
     },
 ];
