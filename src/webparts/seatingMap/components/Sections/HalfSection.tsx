@@ -1,9 +1,6 @@
 import * as React from 'react';
-//import departmentColors from '../Utilities/DepartmentColors';
 import styles from '../SeatingMap.module.scss';
 import { UserWithSeat as ImportedUserWithSeat } from '../Utilities/FetchUserData';
-
-
 
 interface HalfSectionProps {
     section: number;
@@ -14,6 +11,7 @@ interface HalfSectionProps {
     bossRoom: boolean;
     bossDeskPosition?: { gridRow: number; gridColumn: string };
     highlightedUserId: string | null;
+    highlightedDepartment: string | null;
 }
 
 const HalfSection: React.FC<HalfSectionProps> = ({
@@ -24,9 +22,9 @@ const HalfSection: React.FC<HalfSectionProps> = ({
                                                      onDeskClick,
                                                      bossRoom,
                                                      bossDeskPosition,
-                                                     highlightedUserId
+                                                     highlightedUserId,
+                                                     highlightedDepartment,
                                                  }) => {
-
     const deskRefs = React.useRef<(HTMLDivElement | null)[]>([]);
     const renderedDesks: JSX.Element[] = [];
     let deskCounter = 1;
@@ -45,6 +43,7 @@ const HalfSection: React.FC<HalfSectionProps> = ({
         rows.forEach(row => {
             const assignedUser = users.find(user => user.section === section.toString() && user.seat === deskCounter.toString());
             const isHighlightedUser = assignedUser && highlightedUserId && assignedUser.id === highlightedUserId;
+            const isHighlightedDepartment = assignedUser && highlightedDepartment && assignedUser.department === highlightedDepartment;
 
             const deskClass = column % 2 === 0 ? styles.deskEven : styles.deskOdd;
 
@@ -54,13 +53,9 @@ const HalfSection: React.FC<HalfSectionProps> = ({
                     ref={el => {
                         deskRefs.current[deskCounter - 1] = el;
                     }}
-                    className={`${styles.deskHalf} ${deskClass}  ${isHighlightedUser ? styles.highlightedDesk : ''}`}
+                    className={`${styles.deskHalf} ${deskClass} ${isHighlightedUser ? styles.highlightedDesk : ''} ${isHighlightedDepartment ? styles.departmentDesk : ''}`}
                     style={{ gridRow: row, gridColumn: column }}
-                    onClick={() => {
-                        console.log('Desk clicked');
-                        console.log('Assigned user:', assignedUser);
-                        onDeskClick(assignedUser);
-                    }}
+                    onClick={() => onDeskClick(assignedUser)}
                     data-testid={`desk-${section}-${deskCounter}`}
                 >
                     <div className={styles.seat}>
@@ -81,6 +76,7 @@ const HalfSection: React.FC<HalfSectionProps> = ({
     if (bossRoom) {
         const assignedUser = users.find(user => user.section === section.toString() && user.seat === deskCounter.toString());
         const isHighlightedUser = assignedUser && highlightedUserId && assignedUser.id === highlightedUserId;
+        const isHighlightedDepartment = assignedUser && highlightedDepartment && assignedUser.department === highlightedDepartment;
 
         renderedDesks.push(
             <div
@@ -88,13 +84,9 @@ const HalfSection: React.FC<HalfSectionProps> = ({
                 ref={el => {
                     deskRefs.current[deskCounter - 1] = el;
                 }}
-                className={`${styles.deskHalf} ${styles.largeDesk}  ${isHighlightedUser ? styles.highlightedDesk : ''}`}
+                className={`${styles.deskHalf} ${styles.largeDesk} ${isHighlightedUser ? styles.highlightedDesk : ''} ${isHighlightedDepartment ? styles.departmentDesk : ''}`}
                 style={bossDeskPosition || { gridRow: 2, gridColumn: '1 / span 2' }}
-                onClick={() => {
-                    console.log('Boss desk clicked');
-                    console.log('Assigned user:', assignedUser);
-                    onDeskClick(assignedUser);
-                }}
+                onClick={() => onDeskClick(assignedUser)}
                 data-testid={`desk-${section}-${deskCounter}`}
             >
                 <div className={styles.seat}>

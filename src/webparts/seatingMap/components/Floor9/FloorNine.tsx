@@ -5,8 +5,7 @@ import EmptyFullSection from "../Sections/EmptyFullSection";
 import HalfSection from "../Sections/HalfSection";
 import styles from "../SeatingMap.module.scss";
 import { UserWithSeat } from "../ISeatingMapProps";
-import {useEffect} from "react";
-
+import { useEffect } from "react";
 
 interface SectionConfig {
     section: number;
@@ -21,9 +20,10 @@ interface FloorProps {
     onDeskClick: (user: UserWithSeat | undefined) => void;
     selectedFloor: number;
     highlightedUserId: string | null;
+    highlightedDepartment: string | null;
 }
 
-const FloorNine: React.FC<FloorProps> = ({ sectionsConfig,  users, onDeskClick, selectedFloor, highlightedUserId }) => {
+const FloorNine: React.FC<FloorProps> = ({ sectionsConfig, users, onDeskClick, selectedFloor, highlightedUserId, highlightedDepartment }) => {
     const containerRef = React.useRef<HTMLDivElement | null>(null);
 
     useEffect(() => {
@@ -48,12 +48,14 @@ const FloorNine: React.FC<FloorProps> = ({ sectionsConfig,  users, onDeskClick, 
                     users={users}
                     onDeskClick={onDeskClick}
                     highlightedUserId={highlightedUserId}
+                    highlightedDepartment={highlightedDepartment}
                 />
                 <HalfSection
                     {...sectionsConfig[8]}
                     users={users}
                     onDeskClick={onDeskClick}
                     highlightedUserId={highlightedUserId}
+                    highlightedDepartment={highlightedDepartment}
                 />
                 <EmptyFullSection text="Elevators" />
                 <HalfSection
@@ -61,12 +63,14 @@ const FloorNine: React.FC<FloorProps> = ({ sectionsConfig,  users, onDeskClick, 
                     users={users}
                     onDeskClick={onDeskClick}
                     highlightedUserId={highlightedUserId}
+                    highlightedDepartment={highlightedDepartment}
                 />
                 <HalfSection
                     {...sectionsConfig[10]}
                     users={users}
                     onDeskClick={onDeskClick}
                     highlightedUserId={highlightedUserId}
+                    highlightedDepartment={highlightedDepartment}
                 />
                 <EmptyFullSection text="Staircase" />
                 <EmptyHalfSection text="Womans Bathroom" />
@@ -79,6 +83,7 @@ const FloorNine: React.FC<FloorProps> = ({ sectionsConfig,  users, onDeskClick, 
                     onDeskClick={onDeskClick}
                     bossDeskPosition={{ gridRow: 2, gridColumn: '1 / span 2' }}
                     highlightedUserId={highlightedUserId}
+                    highlightedDepartment={highlightedDepartment}
                 />
                 <EmptyHalfSection text="Wardrobe" />
             </div>
@@ -95,6 +100,7 @@ const FloorNine: React.FC<FloorProps> = ({ sectionsConfig,  users, onDeskClick, 
                         onDeskClick={onDeskClick}
                         selectedFloor={selectedFloor}
                         highlightedUserId={highlightedUserId}
+                        highlightedDepartment={highlightedDepartment}
                     />
                 ))}
                 <EmptyHalfSection text="Kitchen" />
@@ -106,6 +112,7 @@ const FloorNine: React.FC<FloorProps> = ({ sectionsConfig,  users, onDeskClick, 
                     selectedFloor={selectedFloor}
                     bossDeskPosition={{ gridRow: 1, gridColumn: '1 / span 3' }}
                     highlightedUserId={highlightedUserId}
+                    highlightedDepartment={highlightedDepartment}
                 />
                 <FullSection
                     key={`section-${sectionsConfig[12].section}`}
@@ -114,6 +121,7 @@ const FloorNine: React.FC<FloorProps> = ({ sectionsConfig,  users, onDeskClick, 
                     onDeskClick={onDeskClick}
                     selectedFloor={selectedFloor}
                     highlightedUserId={highlightedUserId}
+                    highlightedDepartment={highlightedDepartment}
                 />
                 {sectionsConfig.slice(5, 7).map((config, index) => (
                     <FullSection
@@ -123,6 +131,7 @@ const FloorNine: React.FC<FloorProps> = ({ sectionsConfig,  users, onDeskClick, 
                         onDeskClick={onDeskClick}
                         selectedFloor={selectedFloor}
                         highlightedUserId={highlightedUserId}
+                        highlightedDepartment={highlightedDepartment}
                     />
                 ))}
             </div>

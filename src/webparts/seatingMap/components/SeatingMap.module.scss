@@ -199,3 +199,32 @@ highlightedUserDesk {
   color: white;
 }
 
+// src/components/SeatingMap.module.scss
+
+.floorBtnCont {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 10px;
+}
+
+.selectedFloorButton {
+  background-color: #0078d4; // Change to desired highlight color
+  color: white;
+}
+
+.departmentBtnCont {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 10px;
+  flex-wrap: wrap;
+}
+
+.highlightedDesk {
+  background-color: yellow;
+}
+
+.departmentDesk {
+  background-color: yellow;
+}
+
+

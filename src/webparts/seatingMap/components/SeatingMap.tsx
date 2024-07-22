@@ -1,4 +1,3 @@
-// src/components/SeatingMap.tsx
 import * as React from 'react';
 import { useState, useEffect } from 'react';
 import { ISeatingMapProps } from './ISeatingMapProps';
@@ -11,7 +10,6 @@ import { DefaultButton, PrimaryButton } from '@fluentui/react/lib/Button';
 import { sectionsConfig } from './Utilities/sectionsConfig';
 import styles from './SeatingMap.module.scss';
 import { OrgStructure } from './Departments/Orgstructure';
-
 
 interface UserWithSeat extends MicrosoftGraph.User {
     seat?: string;
@@ -28,7 +26,7 @@ const sectionToFloorMap = {
 const getFloorBySection = (section: number) => {
     if (sectionToFloorMap[9].includes(section)) return 9;
     if (sectionToFloorMap[2].includes(section)) return 2;
-    return 9;
+    return 9; // Default to floor 9 if section is not found
 };
 
 const SeatingMap: React.FunctionComponent<ISeatingMapProps> = (props: ISeatingMapProps) => {
@@ -37,8 +35,7 @@ const SeatingMap: React.FunctionComponent<ISeatingMapProps> = (props: ISeatingMa
     const [isDialogHidden, setIsDialogHidden] = useState(true);
     const [selectedFloor, setSelectedFloor] = useState(9);
     const [highlightedUserId, setHighlightedUserId] = useState<string | null>(null);
-
-
+    const [highlightedDepartment, setHighlightedDepartment] = useState<string | null>(null);
 
     const orgStructure = new OrgStructure();
     orgStructure.init();
@@ -49,9 +46,7 @@ const SeatingMap: React.FunctionComponent<ISeatingMapProps> = (props: ISeatingMa
         orgStructureMap.set(dep.departmentAAD, dep.departmentName);
     });
 
-
     useEffect(() => {
-
         const params = new URLSearchParams(window.location.search);
         const userId = params.get("userId");
         if (userId) {
@@ -77,8 +72,6 @@ const SeatingMap: React.FunctionComponent<ISeatingMapProps> = (props: ISeatingMa
                 console.error("Error fetching data:", error);
             }
         };
-
-
 
         fetchData().catch(error => console.error("Unhandled error in fetchData:", error));
     }, [highlightedUserId]);
@@ -116,11 +109,30 @@ const SeatingMap: React.FunctionComponent<ISeatingMapProps> = (props: ISeatingMa
         return selectedFloor === floor ? styles.selectedFloorButton : '';
     };
 
+    const handleDepartmentClick = (department: string) => {
+        setHighlightedDepartment(department);
+    };
+
+    const uniqueDepartments = Array.from(new Set(users
+        .map(user => user.department)
+        .filter((dept): dept is string => typeof dept === 'string' && dept.length > 0)
+    ));
+
     return (
         <div>
             <div className={styles.floorBtnCont}>
                 <PrimaryButton className={getButtonClassName(9)} onClick={() => setSelectedFloor(9)} text="Floor 9" />
                 <PrimaryButton className={getButtonClassName(2)} onClick={() => setSelectedFloor(2)} text="Floor 2" />
+            </div>
+
+            <div className={styles.departmentBtnCont}>
+                {uniqueDepartments.filter(Boolean).map(department => (
+                    <PrimaryButton
+                        key={department}
+                        onClick={() => handleDepartmentClick(department)}
+                        text={department || ''}
+                    />
+                ))}
             </div>
 
             {selectedFloor === 9 && (
@@ -130,6 +142,7 @@ const SeatingMap: React.FunctionComponent<ISeatingMapProps> = (props: ISeatingMa
                     onDeskClick={handleDeskClick}
                     selectedFloor={selectedFloor}
                     highlightedUserId={highlightedUserId}
+                    highlightedDepartment={highlightedDepartment}
                 />
             )}
 
@@ -140,6 +153,7 @@ const SeatingMap: React.FunctionComponent<ISeatingMapProps> = (props: ISeatingMa
                     onDeskClick={handleDeskClick}
                     selectedFloor={selectedFloor}
                     highlightedUserId={highlightedUserId}
+                    highlightedDepartment={highlightedDepartment}
                 />
             )}
 
