@@ -1,6 +1,7 @@
 import * as React from 'react';
 import styles from '../SeatingMap.module.scss';
-import { UserWithSeat as ImportedUserWithSeat } from '../Utilities/FetchUserData';
+import { UserWithSeat as ImportedUserWithSeat, formatUserName } from '../Utilities/FetchUserData';
+
 
 interface FullSectionProps {
     section: number;
@@ -49,7 +50,9 @@ const FullSection: React.FC<FullSectionProps> = ({
 
             const className = selectedFloor === 2
                 ? `${styles.deskFloorTwo} ${deskClass} ${isHighlightedUser ? styles.highlightedDesk : ''} ${isHighlightedDepartment ? styles.departmentDesk : ''}`
-                : `${styles.desk} ${deskClassNine} ${isHighlightedUser ? styles.highlightedDesk : ''} ${isHighlightedDepartment ? styles.departmentDesk : ''}`;
+                : `${styles.desk} ${styles.deskVertical} ${deskClassNine} ${isHighlightedUser ? styles.highlightedDesk : ''} ${isHighlightedDepartment ? styles.departmentDesk : ''}`;
+
+
 
             renderedDesks.push(
                 <div
@@ -63,11 +66,13 @@ const FullSection: React.FC<FullSectionProps> = ({
                     data-testid={`desk-${section}-${deskCounter}`}
                 >
                     <div className={styles.seat}>
-                        {deskCounter}
+                        {/*{deskCounter}*/}
                         {assignedUser && (
-                            <div>
-                                {assignedUser.displayName}
+
+                            <div className={styles.seatText}>
+                                {formatUserName(assignedUser.displayName || '')}
                             </div>
+
                         )}
                     </div>
                 </div>
@@ -76,6 +81,7 @@ const FullSection: React.FC<FullSectionProps> = ({
             deskCounter++;
         });
     });
+
 
     const meetingRoomStyle = hasMeetingRoom === 'left'
         ? { gridColumn: '1 / 3', gridRow: '1 / 3' }
@@ -92,7 +98,6 @@ const FullSection: React.FC<FullSectionProps> = ({
     return (
         <div
             className={styles.fullSection}
-            style={{ maxWidth: '300px', minWidth: '300px', height: '100%', border: '2px solid black' }}
         >
             <div className={officeLayoutClassName}>
                 {hasMeetingRoom && (

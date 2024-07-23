@@ -94,3 +94,14 @@ const matchUsersWithExcelData = async (client: MSGraphClientV3): Promise<UserWit
 };
 
 export { matchUsersWithExcelData };
+
+export const formatUserName = (fullName: string) => {
+    if (!fullName) return '';
+    const nameParts = fullName.split(' ');
+    if (nameParts.length === 1) return nameParts[0];
+
+    const firstName = nameParts[0];
+    const initials = nameParts.slice(1).map(name => name.charAt(0) + '.').join('');
+
+    return `${firstName} ${initials}`;
+};

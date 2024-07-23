@@ -1,7 +1,8 @@
 .mainContainer {
-  margin: 50px;
+  //margin: 50px;
+  margin-top: 15px;
   border: solid 1px black;
-  height: 800px;
+  height: 600px;
   overflow-x: auto;
   white-space: nowrap;
   padding: 10px;
@@ -23,24 +24,48 @@
 
 .fullSection {
   display: inline-block;
-  width: 300px;
+  width: 250px;
+  border: 2px solid black;
+  border-right: none;
+  height: 100%;
+}
+
+.fullSection:last-child {
+  border-right: 2px solid black;
 }
 
 .halfSection {
   display: inline-block;
-  width: 150px;
+  width: 125px;
   border: 2px solid black;
+  border-right: none;
   height: 100%;
+}
+
+.seatText {
+  font-size: 11px;
+  text-wrap: balance;
+}
+
+.halfSection:last-child {
+  border-right: 2px solid black;
 }
 
 .emptyFullSection {
   display: inline-block;
-  width: 300px;
+  width: 250px;
 }
 
 .emptyHalfSection {
   display: inline-block;
-  width: 150px;
+  width: 125px;
+}
+
+.loadingContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 150vh;
 }
 
 
@@ -94,6 +119,11 @@
   position: relative;
   overflow: hidden;
   align-self: center;
+
+}
+
+.deskVertical{
+  writing-mode: vertical-lr;
 }
 
 .deskFloorTwo {
@@ -135,6 +165,8 @@
   font-size: 14px;
   font-weight: bold;
   max-width: 100%;
+  font-family: monospace;
+
 }
 
 .largeDesk {

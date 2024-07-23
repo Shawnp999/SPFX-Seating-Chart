@@ -1,6 +1,6 @@
 import * as React from 'react';
 import styles from '../SeatingMap.module.scss';
-import { UserWithSeat as ImportedUserWithSeat } from '../Utilities/FetchUserData';
+import {formatUserName, UserWithSeat as ImportedUserWithSeat} from '../Utilities/FetchUserData';
 
 interface HalfSectionProps {
     section: number;
@@ -59,10 +59,10 @@ const HalfSection: React.FC<HalfSectionProps> = ({
                     data-testid={`desk-${section}-${deskCounter}`}
                 >
                     <div className={styles.seat}>
-                        {deskCounter}
+                        {/*{deskCounter}*/}
                         {assignedUser && (
-                            <div>
-                                {assignedUser.displayName}
+                            <div className={styles.seatText}>
+                                {formatUserName(assignedUser.displayName || '')}
                             </div>
                         )}
                     </div>
@@ -90,10 +90,10 @@ const HalfSection: React.FC<HalfSectionProps> = ({
                 data-testid={`desk-${section}-${deskCounter}`}
             >
                 <div className={styles.seat}>
-                    {deskCounter}
+                    {/*{deskCounter}*/}
                     {assignedUser && (
-                        <div>
-                            {assignedUser.displayName}
+                        <div className={styles.seatText}>
+                            {formatUserName(assignedUser.displayName || '')}
                         </div>
                     )}
                 </div>
@@ -104,7 +104,7 @@ const HalfSection: React.FC<HalfSectionProps> = ({
     }
 
     return (
-        <div className={styles.halfSection} style={{ maxWidth: '150px', minWidth: '150px', height: '100%', border: '2px solid black' }}>
+        <div className={styles.halfSection} >
             <div className={styles.officeLayoutHalf}>
                 {renderedDesks}
             </div>

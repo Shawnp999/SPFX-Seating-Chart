@@ -1,4 +1,5 @@
 import * as React from 'react';
+import styles from "../SeatingMap.module.scss";
 
 interface EmptyHalfSectionProps {
   text?: string;
@@ -6,7 +7,7 @@ interface EmptyHalfSectionProps {
 
 const EmptyHalfSection: React.FC<EmptyHalfSectionProps> = ({ text }) => {
   return (
-    <div style={{ maxWidth: '150px', minWidth: '150px', height: '100%', border: '2px solid black', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+    <div className={styles.halfSection} style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
       {text && <p>{text}</p>}
     </div>
   );
