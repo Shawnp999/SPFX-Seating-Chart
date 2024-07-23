@@ -7,6 +7,7 @@ import { matchUsersWithExcelData } from './Utilities/FetchUserData';
 import * as MicrosoftGraph from '@microsoft/microsoft-graph-types';
 import { Dialog, DialogType, DialogFooter } from '@fluentui/react/lib/Dialog';
 import { DefaultButton, PrimaryButton } from '@fluentui/react/lib/Button';
+import { Dropdown, IDropdownOption } from '@fluentui/react/lib/Dropdown';
 import { sectionsConfig } from './Utilities/sectionsConfig';
 import styles from './SeatingMap.module.scss';
 import { OrgStructure } from './Departments/Orgstructure';
@@ -26,7 +27,7 @@ const sectionToFloorMap = {
 const getFloorBySection = (section: number) => {
     if (sectionToFloorMap[9].includes(section)) return 9;
     if (sectionToFloorMap[2].includes(section)) return 2;
-    return 9; // Default to floor 9 if section is not found
+    return 9; //default to floor 9
 };
 
 const SeatingMap: React.FunctionComponent<ISeatingMapProps> = (props: ISeatingMapProps) => {
@@ -36,6 +37,7 @@ const SeatingMap: React.FunctionComponent<ISeatingMapProps> = (props: ISeatingMa
     const [selectedFloor, setSelectedFloor] = useState(9);
     const [highlightedUserId, setHighlightedUserId] = useState<string | null>(null);
     const [highlightedDepartment, setHighlightedDepartment] = useState<string | null>(null);
+    const [selectedDepartment, setSelectedDepartment] = useState<string | null>(null);
 
     const orgStructure = new OrgStructure();
     orgStructure.init();
@@ -58,7 +60,7 @@ const SeatingMap: React.FunctionComponent<ISeatingMapProps> = (props: ISeatingMa
                 const graphClient = await props.context.msGraphClientFactory.getClient('3');
                 const matchedUsers = await matchUsersWithExcelData(graphClient);
                 setUsers(matchedUsers);
-                console.log('Matched users:', matchedUsers);
+                //console.log('Matched users:', matchedUsers);
 
                 if (highlightedUserId) {
                     const user = matchedUsers.find(u => u.id === highlightedUserId);
@@ -75,6 +77,12 @@ const SeatingMap: React.FunctionComponent<ISeatingMapProps> = (props: ISeatingMa
 
         fetchData().catch(error => console.error("Unhandled error in fetchData:", error));
     }, [highlightedUserId]);
+
+    useEffect(() => {
+        if (selectedDepartment) {
+            setHighlightedUserId(null);
+        }
+    }, [selectedDepartment]);
 
     const correctUserDepartmentName = (incorrectDepartmentName: MicrosoftGraph.NullableOption<string> | undefined): string => {
         if (incorrectDepartmentName === null || incorrectDepartmentName === undefined) {
@@ -109,14 +117,22 @@ const SeatingMap: React.FunctionComponent<ISeatingMapProps> = (props: ISeatingMa
         return selectedFloor === floor ? styles.selectedFloorButton : '';
     };
 
-    const handleDepartmentClick = (department: string) => {
-        setHighlightedDepartment(department);
+    const handleDepartmentChange = (event: React.FormEvent<HTMLDivElement>, option?: IDropdownOption) => {
+        const selectedKey = option ? option.key as string : null;
+        setSelectedDepartment(selectedKey);
+        setHighlightedDepartment(selectedKey);
+        setHighlightedUserId(null); //clear highlighted user when dep change
     };
 
     const uniqueDepartments = Array.from(new Set(users
         .map(user => user.department)
         .filter((dept): dept is string => typeof dept === 'string' && dept.length > 0)
     ));
+
+    const departmentOptions: IDropdownOption[] = [
+        { key: 'all', text: 'No department selected' },
+        ...uniqueDepartments.map(dept => ({ key: dept, text: dept }))
+    ];
 
     return (
         <div>
@@ -125,15 +141,13 @@ const SeatingMap: React.FunctionComponent<ISeatingMapProps> = (props: ISeatingMa
                 <PrimaryButton className={getButtonClassName(2)} onClick={() => setSelectedFloor(2)} text="Floor 2" />
             </div>
 
-            <div className={styles.departmentBtnCont}>
-                {uniqueDepartments.filter(Boolean).map(department => (
-                    <PrimaryButton
-                        key={department}
-                        onClick={() => handleDepartmentClick(department)}
-                        text={department || ''}
-                    />
-                ))}
-            </div>
+            <Dropdown
+                placeholder="Select a department"
+                label="Department"
+                options={departmentOptions}
+                selectedKey={selectedDepartment || 'all'}
+                onChange={handleDepartmentChange}
+            />
 
             {selectedFloor === 9 && (
                 <FloorNine
@@ -192,13 +206,15 @@ const SeatingMap: React.FunctionComponent<ISeatingMapProps> = (props: ISeatingMa
                     <p>No user found for this seat.</p>
                 )}
                 <DialogFooter>
-                    <DefaultButton onClick={() => setIsDialogHidden(true)} text="Close" />
+
                     {selectedUser && typeof selectedUser.id === 'string' && selectedUser.id.length > 0 && (
                         <DefaultButton
                             href={`https://eneraseg.sharepoint.com/sites/UZMTO2/SitePages/profile-page.aspx?userId=${selectedUser.id}`}
                             text="See Profile"
                         />
                     )}
+
+                    <DefaultButton onClick={() => setIsDialogHidden(true)} text="Close" />
                 </DialogFooter>
             </Dialog>
         </div>

@@ -21,10 +21,12 @@
     "@microsoft/sp-property-pane": "1.18.2",
     "@microsoft/sp-webpart-base": "1.18.2",
     "@types/react-bootstrap": "^0.32.37",
+    "@types/select2": "^4.0.63",
     "bootstrap": "^5.3.3",
     "react": "17.0.1",
     "react-bootstrap": "^2.10.4",
     "react-dom": "17.0.1",
+    "select2": "^4.1.0-rc.0",
     "tslib": "2.3.1"
   },
   "devDependencies": {

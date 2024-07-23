@@ -22,6 +22,7 @@ const fetchExcelData = async (client: MSGraphClientV3): Promise<any[]> => {
             .get();
         const values = response?.values || [];
         return values;
+        //console.log(values)
     } catch (error) {
         console.error("Error fetching Excel data:", error);
         throw error;
@@ -38,6 +39,7 @@ const processData = (excelData: any): ExcelRow[] => {
             section: row[11],
         }));
         return mappedData;
+        //console.log('mappedData',mappedData)
     } else {
         console.log("Excel data is empty or not an array.");
         return [];
