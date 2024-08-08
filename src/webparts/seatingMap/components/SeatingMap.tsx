@@ -38,6 +38,7 @@ const SeatingMap: React.FunctionComponent<ISeatingMapProps> = (props: ISeatingMa
     const [highlightedUserId, setHighlightedUserId] = useState<string | null>(null);
     const [highlightedDepartment, setHighlightedDepartment] = useState<string | null>(null);
     const [selectedDepartment, setSelectedDepartment] = useState<string | null>(null);
+    const [isLoading , setIsLoading] = useState(true);
 
     const orgStructure = new OrgStructure();
     orgStructure.init();
@@ -56,6 +57,7 @@ const SeatingMap: React.FunctionComponent<ISeatingMapProps> = (props: ISeatingMa
         }
 
         const fetchData = async () => {
+            setIsLoading(true);
             try {
                 const graphClient = await props.context.msGraphClientFactory.getClient('3');
                 const matchedUsers = await matchUsersWithExcelData(graphClient);
@@ -72,6 +74,8 @@ const SeatingMap: React.FunctionComponent<ISeatingMapProps> = (props: ISeatingMa
                 }
             } catch (error) {
                 console.error("Error fetching data:", error);
+            } finally {
+                setIsLoading(false);
             }
         };
 
@@ -136,87 +140,99 @@ const SeatingMap: React.FunctionComponent<ISeatingMapProps> = (props: ISeatingMa
 
     return (
         <div>
-            <div className={styles.floorBtnCont}>
-                <PrimaryButton className={getButtonClassName(9)} onClick={() => setSelectedFloor(9)} text="Floor 9" />
-                <PrimaryButton className={getButtonClassName(2)} onClick={() => setSelectedFloor(2)} text="Floor 2" />
-            </div>
+            {isLoading ? (
+                <div className={styles.loadingContainer}>
+                    <img
+                        src="https://media.giphy.com/media/3oEjI6SIIHBdRxXI40/giphy.gif"
+                        alt="Loading..."
+                    />
+                </div>
+            ) : (
+                <>
 
-            <Dropdown
-                placeholder="Select a department"
-                label="Department"
-                options={departmentOptions}
-                selectedKey={selectedDepartment || 'all'}
-                onChange={handleDepartmentChange}
-            />
+                <div className={styles.floorBtnCont}>
+                    <PrimaryButton className={getButtonClassName(9)} onClick={() => setSelectedFloor(9)} text="Floor 9" />
+                    <PrimaryButton className={getButtonClassName(2)} onClick={() => setSelectedFloor(2)} text="Floor 2" />
+                </div>
 
-            {selectedFloor === 9 && (
-                <FloorNine
-                    sectionsConfig={sectionsConfig}
-                    users={users}
-                    onDeskClick={handleDeskClick}
-                    selectedFloor={selectedFloor}
-                    highlightedUserId={highlightedUserId}
-                    highlightedDepartment={highlightedDepartment}
+                <Dropdown
+                    placeholder="Select a department"
+                    label="Department"
+                    options={departmentOptions}
+                    selectedKey={selectedDepartment || 'all'}
+                    onChange={handleDepartmentChange}
                 />
-            )}
 
-            {selectedFloor === 2 && (
-                <FloorTwo
-                    sectionsConfig={sectionsConfig}
-                    users={users}
-                    onDeskClick={handleDeskClick}
-                    selectedFloor={selectedFloor}
-                    highlightedUserId={highlightedUserId}
-                    highlightedDepartment={highlightedDepartment}
-                />
-            )}
-
-            <Dialog
-                hidden={isDialogHidden}
-                onDismiss={() => setIsDialogHidden(true)}
-                dialogContentProps={{
-                    type: DialogType.largeHeader,
-                    title: 'User Details',
-                }}
-            >
-                {selectedUser ? (
-                    <div>
-                        <img
-                            src={`https://eneraseg.sharepoint.com/sites/UZMTO2/foto_employees/${selectedUser.mail?.replace('@uzmto.com', '')}/profile.jpg` || NoUserPhotoUrl}
-                            alt="User Photo"
-                            onError={(e) => {
-                                e.currentTarget.src = NoUserPhotoUrl;
-                                e.currentTarget.style.borderRadius = '10px';
-                                e.currentTarget.style.objectFit = 'cover';
-                                e.currentTarget.style.width = '100%';
-                            }}
-                            style={{
-                                width: '100%',
-                                cursor: 'pointer',
-                                height: '100%',
-                                objectFit: 'cover',
-                                borderRadius: '10px'
-                            }}
-                        />
-                        <p>Display Name: {selectedUser.displayName}</p>
-                        <p>Department: {selectedUser.department}</p>
-                        <p>Internal Number(s): {selectedUser.businessPhones}</p>
-                    </div>
-                ) : (
-                    <p>No user found for this seat.</p>
+                {selectedFloor === 9 && (
+                    <FloorNine
+                        sectionsConfig={sectionsConfig}
+                        users={users}
+                        onDeskClick={handleDeskClick}
+                        selectedFloor={selectedFloor}
+                        highlightedUserId={highlightedUserId}
+                        highlightedDepartment={highlightedDepartment}
+                    />
                 )}
-                <DialogFooter>
 
-                    {selectedUser && typeof selectedUser.id === 'string' && selectedUser.id.length > 0 && (
-                        <DefaultButton
-                            href={`https://eneraseg.sharepoint.com/sites/UZMTO2/SitePages/profile-page.aspx?userId=${selectedUser.id}`}
-                            text="See Profile"
-                        />
+                {selectedFloor === 2 && (
+                    <FloorTwo
+                        sectionsConfig={sectionsConfig}
+                        users={users}
+                        onDeskClick={handleDeskClick}
+                        selectedFloor={selectedFloor}
+                        highlightedUserId={highlightedUserId}
+                        highlightedDepartment={highlightedDepartment}
+                    />
+                )}
+
+                <Dialog
+                    hidden={isDialogHidden}
+                    onDismiss={() => setIsDialogHidden(true)}
+                    dialogContentProps={{
+                        type: DialogType.largeHeader,
+                        title: 'User Details',
+                    }}
+                >
+                    {selectedUser ? (
+                        <div>
+                            <img
+                                src={`https://eneraseg.sharepoint.com/sites/UZMTO2/foto_employees/${selectedUser.mail?.replace('@uzmto.com', '')}/profile.jpg` || NoUserPhotoUrl}
+                                alt="User Photo"
+                                onError={(e) => {
+                                    e.currentTarget.src = NoUserPhotoUrl;
+                                    e.currentTarget.style.borderRadius = '10px';
+                                    e.currentTarget.style.objectFit = 'cover';
+                                    e.currentTarget.style.width = '100%';
+                                }}
+                                style={{
+                                    width: '100%',
+                                    cursor: 'pointer',
+                                    height: '100%',
+                                    objectFit: 'cover',
+                                    borderRadius: '10px'
+                                }}
+                            />
+                            <p>Display Name: {selectedUser.displayName}</p>
+                            <p>Department: {selectedUser.department}</p>
+                            <p>Internal Number(s): {selectedUser.businessPhones}</p>
+                        </div>
+                    ) : (
+                        <p>No user found for this seat.</p>
                     )}
+                    <DialogFooter>
 
-                    <DefaultButton onClick={() => setIsDialogHidden(true)} text="Close" />
-                </DialogFooter>
-            </Dialog>
+                        {selectedUser && typeof selectedUser.id === 'string' && selectedUser.id.length > 0 && (
+                            <DefaultButton
+                                href={`https://eneraseg.sharepoint.com/sites/UZMTO2/SitePages/profile-page.aspx?userId=${selectedUser.id}`}
+                                text="See Profile"
+                            />
+                        )}
+
+                        <DefaultButton onClick={() => setIsDialogHidden(true)} text="Close" />
+                    </DialogFooter>
+                </Dialog>
+                </>
+                )}
         </div>
     );
 };

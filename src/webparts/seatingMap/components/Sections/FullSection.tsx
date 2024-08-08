@@ -66,7 +66,7 @@ const FullSection: React.FC<FullSectionProps> = ({
                     data-testid={`desk-${section}-${deskCounter}`}
                 >
                     <div className={styles.seat}>
-                        {/*{deskCounter}*/}
+                        {deskCounter}
                         {assignedUser && (
 
                             <div className={styles.seatText}>
@@ -118,11 +118,10 @@ const FullSection: React.FC<FullSectionProps> = ({
                             alignItems: 'end',
                         }}
                     >
-                        {[...Array(2)].map((_, i) => {
+                        {[...Array(section === 14 ? 1 : 2)].map((_, i) => {
                             const assignedUser = users.find(user => user.section === section.toString() && user.seat === deskCounter.toString());
                             const isHighlightedUser = assignedUser && highlightedUserId && assignedUser.id === highlightedUserId;
                             const isHighlightedDepartment = assignedUser && highlightedDepartment && assignedUser.department === highlightedDepartment;
-
                             return (
                                 <div
                                     key={`boss-${i + 1}`}
@@ -134,9 +133,19 @@ const FullSection: React.FC<FullSectionProps> = ({
                                     onClick={() => onDeskClick(assignedUser)}
                                     data-testid={`desk-${section}-boss-${i + 1}`}
                                 >
-                                    <div className={styles.seat}>{deskCounter++}</div>
+
+                                    {assignedUser && (
+
+                                        <div className={styles.seatText}>
+                                            {formatUserName(assignedUser.displayName || '')}
+                                            {deskCounter++}
+                                        </div>
+
+                                    )}
+
                                 </div>
                             );
+
                         })}
                     </div>
                 )}

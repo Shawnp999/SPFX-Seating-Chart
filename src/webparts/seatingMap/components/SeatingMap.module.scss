@@ -65,7 +65,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 150vh;
+  height: 600px;
 }
 
 
@@ -123,7 +123,7 @@
 }
 
 .deskVertical{
-  writing-mode: vertical-lr;
+  writing-mode: tb-rl;
 }
 
 .deskFloorTwo {
