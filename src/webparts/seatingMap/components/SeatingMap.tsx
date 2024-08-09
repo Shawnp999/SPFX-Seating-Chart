@@ -88,6 +88,8 @@ const SeatingMap: React.FunctionComponent<ISeatingMapProps> = (props: ISeatingMa
         }
     }, [selectedDepartment]);
 
+
+
     const correctUserDepartmentName = (incorrectDepartmentName: MicrosoftGraph.NullableOption<string> | undefined): string => {
         if (incorrectDepartmentName === null || incorrectDepartmentName === undefined) {
             return 'No department';

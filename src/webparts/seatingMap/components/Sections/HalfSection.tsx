@@ -45,7 +45,7 @@ const HalfSection: React.FC<HalfSectionProps> = ({
             const isHighlightedUser = assignedUser && highlightedUserId && assignedUser.id === highlightedUserId;
             const isHighlightedDepartment = assignedUser && highlightedDepartment && assignedUser.department === highlightedDepartment;
 
-            const deskClass = column % 2 === 0 ? styles.deskEven : styles.deskOdd;
+            const deskClass = row % 2 === 0 ? `${styles.smallDeskUp}  ${styles.positionBottom} ` : styles.smallDeskDown;
 
             renderedDesks.push(
                 <div
@@ -77,6 +77,8 @@ const HalfSection: React.FC<HalfSectionProps> = ({
         const assignedUser = users.find(user => user.section === section.toString() && user.seat === deskCounter.toString());
         const isHighlightedUser = assignedUser && highlightedUserId && assignedUser.id === highlightedUserId;
         const isHighlightedDepartment = assignedUser && highlightedDepartment && assignedUser.department === highlightedDepartment;
+        const setClassCustom = {justifyContent : 'center' , display : 'flex' };
+        const setTextClassCustom = {maxWidth : '80%'};
 
         renderedDesks.push(
             <div
@@ -84,15 +86,15 @@ const HalfSection: React.FC<HalfSectionProps> = ({
                 ref={el => {
                     deskRefs.current[deskCounter - 1] = el;
                 }}
-                className={`${styles.deskHalf} ${styles.largeDesk} ${isHighlightedUser ? styles.highlightedDesk : ''} ${isHighlightedDepartment ? styles.departmentDesk : ''}`}
+                className={`${styles.deskBossCenterUp} ${styles.bossDeskUp} ${isHighlightedUser ? styles.highlightedDesk : ''} ${isHighlightedDepartment ? styles.departmentDesk : ''}`}
                 style={bossDeskPosition || { gridRow: 2, gridColumn: '1 / span 2' }}
                 onClick={() => onDeskClick(assignedUser)}
                 data-testid={`desk-${section}-${deskCounter}`}
             >
-                <div className={styles.seat}>
+                <div className={styles.seat} style={setClassCustom}>
                     {/*{deskCounter}*/}
                     {assignedUser && (
-                        <div className={styles.seatText}>
+                        <div className={styles.seatText} style={setTextClassCustom} >
                             {formatUserName(assignedUser.displayName || '')}
                         </div>
                     )}

@@ -2,7 +2,6 @@ import * as React from 'react';
 import styles from '../SeatingMap.module.scss';
 import { UserWithSeat as ImportedUserWithSeat, formatUserName } from '../Utilities/FetchUserData';
 
-
 interface FullSectionProps {
     section: number;
     hasMeetingRoom: string | boolean;
@@ -46,13 +45,18 @@ const FullSection: React.FC<FullSectionProps> = ({
                         : styles.deskBottom
                 : '';
 
-            const deskClassNine = column % 2 === 0 ? styles.deskEven : styles.deskOdd;
+            const deskClassNine = section === 13
+                ? column % 2 !== 0
+                    ? `${styles.rightDesk} ${styles.deskEven}`
+                    : `${styles.leftDesk} ${styles.deskOdd}`
+                : column % 2 === 0
+                    ? `${styles.rightDesk} ${styles.deskEven}`
+                    : `${styles.leftDesk} ${styles.deskOdd}`;
+
 
             const className = selectedFloor === 2
                 ? `${styles.deskFloorTwo} ${deskClass} ${isHighlightedUser ? styles.highlightedDesk : ''} ${isHighlightedDepartment ? styles.departmentDesk : ''}`
                 : `${styles.desk} ${styles.deskVertical} ${deskClassNine} ${isHighlightedUser ? styles.highlightedDesk : ''} ${isHighlightedDepartment ? styles.departmentDesk : ''}`;
-
-
 
             renderedDesks.push(
                 <div
@@ -65,16 +69,12 @@ const FullSection: React.FC<FullSectionProps> = ({
                     onClick={() => onDeskClick(assignedUser)}
                     data-testid={`desk-${section}-${deskCounter}`}
                 >
-                    <div className={styles.seat}>
-                        {deskCounter}
-                        {assignedUser && (
-
-                            <div className={styles.seatText}>
-                                {formatUserName(assignedUser.displayName || '')}
-                            </div>
-
-                        )}
-                    </div>
+                    {assignedUser && (
+                        <div className={styles.seatText}>
+                            {deskCounter}
+                            {formatUserName(assignedUser.displayName || '')}
+                        </div>
+                    )}
                 </div>
             );
 
@@ -82,6 +82,7 @@ const FullSection: React.FC<FullSectionProps> = ({
         });
     });
 
+    const meetingRoomClass = hasMeetingRoom === 'left' ? styles.rightMeetingRoom : hasMeetingRoom === 'right' ? styles.leftMeetingRoom : styles.meetingRoomTable;
 
     const meetingRoomStyle = hasMeetingRoom === 'left'
         ? { gridColumn: '1 / 3', gridRow: '1 / 3' }
@@ -96,18 +97,17 @@ const FullSection: React.FC<FullSectionProps> = ({
         : `${styles.officeLayout}`;
 
     return (
-        <div
-            className={styles.fullSection}
-        >
+        <div className={styles.fullSection}>
             <div className={officeLayoutClassName}>
                 {hasMeetingRoom && (
+
                     <div className={styles.meetingRoom} style={meetingRoomStyle}>
-                        <div className={styles.meetingRoomTable}>Meeting Area</div>
+                        <div className={meetingRoomClass}></div>
                     </div>
+
                 )}
 
                 {renderedDesks}
-
                 {bossRoom && (
                     <div
                         style={{
@@ -128,24 +128,19 @@ const FullSection: React.FC<FullSectionProps> = ({
                                     ref={el => {
                                         deskRefs.current[deskCounter - 1] = el;
                                     }}
-                                    className={`${styles.desk} ${styles.largeDesk} ${isHighlightedUser ? styles.highlightedDesk : ''} ${isHighlightedDepartment ? styles.departmentDesk : ''}`}
-                                    style={bossDeskPosition || { gridRow: 2, gridColumn: '1 / span 2' }}
+                                    className={`${styles.deskBossCenterDown} ${styles.bossDeskDown} ${styles.flexStart} ${isHighlightedUser ? styles.highlightedDesk : ''} ${isHighlightedDepartment ? styles.departmentDesk : ''}`}
+                                    style={bossDeskPosition || { gridRow: 2, gridColumn: '1 / span 2' } }
                                     onClick={() => onDeskClick(assignedUser)}
                                     data-testid={`desk-${section}-boss-${i + 1}`}
                                 >
-
                                     {assignedUser && (
-
                                         <div className={styles.seatText}>
                                             {formatUserName(assignedUser.displayName || '')}
                                             {deskCounter++}
                                         </div>
-
                                     )}
-
                                 </div>
                             );
-
                         })}
                     </div>
                 )}

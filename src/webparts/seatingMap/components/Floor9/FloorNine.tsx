@@ -41,8 +41,8 @@ const FloorNine: React.FC<FloorProps> = ({ sectionsConfig, users, onDeskClick, s
     return (
         <div className={styles.mainContainer} ref={containerRef}>
             <div className={styles.topSectionsCont}>
-                <EmptyHalfSection text="Bathrooms" />
-                <EmptyFullSection text="Staircase" />
+                <EmptyHalfSection text="Mens Bathrooms" />
+                <EmptyFullSection text="stairs" />
                 <HalfSection
                     {...sectionsConfig[7]}
                     users={users}
@@ -72,9 +72,9 @@ const FloorNine: React.FC<FloorProps> = ({ sectionsConfig, users, onDeskClick, s
                     highlightedUserId={highlightedUserId}
                     highlightedDepartment={highlightedDepartment}
                 />
-                <EmptyFullSection text="Staircase" />
+                <EmptyFullSection text="Stairs" />
                 <EmptyHalfSection text="Womans Bathroom" />
-                <EmptyFullSection text="Cleaning room and staircase" />
+                <EmptyFullSection text="Stairs" />
                 <EmptyFullSection text="Taken space" />
                 <EmptyFullSection text="Elevators" />
                 <HalfSection

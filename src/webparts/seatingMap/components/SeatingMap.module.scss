@@ -25,7 +25,7 @@
 .fullSection {
   display: inline-block;
   width: 250px;
-  border: 2px solid black;
+  border: 2px solid #d9d9d9;
   border-right: none;
   height: 100%;
 }
@@ -37,18 +37,23 @@
 .halfSection {
   display: inline-block;
   width: 125px;
-  border: 2px solid black;
+  border: 2px solid #d9d9d9;
   border-right: none;
   height: 100%;
 }
 
 .seatText {
-  font-size: 11px;
+  font-size: 10px;
+  font-weight: 500;
   text-wrap: balance;
+  text-align: center;
+  max-height: 70%;
+  overflow: inherit;
+  padding: 5px;
 }
 
 .halfSection:last-child {
-  border-right: 2px solid black;
+  border-right: 2px solid #d9d9d9;
 }
 
 .emptyFullSection {
@@ -79,7 +84,28 @@
 /*  box-sizing: border-box;*/
 /*}*/
 
+.centerElement {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 
+.positionBottom {
+  display :flex;
+  align-items: flex-end !important;
+}
+
+.positionLeft {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.positionRight {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
 
 
 .officeLayout {
@@ -96,12 +122,13 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  padding: 10px;
   /*border: 1px solid #000;*/
 }
 
 .meetingRoomTable {
-  width: 80%;
-  height: 80%;
+  width: 100%;
+  height: 90%;
   background-color: #ccc;
   display: flex;
   justify-content: center;
@@ -113,14 +140,37 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  border: 1px solid grey;
-  width: 50%;
+  width: 85%;
   height: 90%;
   position: relative;
   overflow: hidden;
   align-self: center;
 
 }
+
+
+.deskBossCenterDown {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start ;
+  width: 85%;
+  height: 80%;
+  position: relative;
+  overflow: hidden;
+  align-self: center;
+}
+
+.deskBossCenterUp {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start ;
+  width: 100%;
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+  align-self: center;
+}
+
 
 .deskVertical{
   writing-mode: tb-rl;
@@ -141,10 +191,12 @@
 
 .deskOdd {
   justify-self: end;
+  margin-right: 1px;
 }
 
 .deskEven {
   justify-self: start;
+  margin-left: 1px;
 }
 
 
@@ -198,9 +250,9 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  border: 1px solid grey;
-  width: 80%;
-  height: 70%;
+  //border: 1px solid grey;
+  width: 100%;
+  height: 100%;
   position: relative;
   overflow:hidden;
 }
@@ -258,5 +310,189 @@ highlightedUserDesk {
 .departmentDesk {
   background-color: yellow;
 }
+
+.displayNone {
+  display: none;
+}
+
+.flexStart{
+  align-items: flex-start !important;
+}
+
+.smallDeskDown {
+  background-image: url('../components/SeatingPlanImgs/newDeskDown.svg');
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+  display: flex;
+  align-items: flex-start;
+}
+
+.smallDeskUp {
+  background-image: url('../components/SeatingPlanImgs/newDeskUp.svg');
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+  display: flex;
+  align-items: flex-start;
+}
+
+.leftDesk {
+  background-image: url('../components/SeatingPlanImgs/leftDesk.svg');
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+  display: flex;
+  align-items: flex-start;
+}
+
+.rightDesk {
+  background-image: url('../components/SeatingPlanImgs/rightDesk.svg');
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+  display: flex;
+  align-items: flex-end;
+}
+
+.bossDeskDown {
+  background-image: url('../components/SeatingPlanImgs/bossDeskDown.svg');
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+  display: flex;
+  align-items: flex-end;
+}
+
+.bossDeskUp {
+  background-image: url('../components/SeatingPlanImgs/bossDeskUp.svg');
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+  display: flex;
+  align-items: flex-end;
+}
+
+.leftMeetingRoom {
+  background-image: url('../components/SeatingPlanImgs/leftMettingRoom.svg');
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+  display: flex;
+  align-items: flex-end;
+  height: 90%;
+  width: 100%;
+}
+
+.rightMeetingRoom {
+  background-image: url('../components/SeatingPlanImgs/rightMettingRoom.svg');
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+  display: flex;
+  align-items: flex-end;
+  height: 90%;
+  width: 100%
+}
+
+.takenSpaceImg {
+  background-image: url('../components/SeatingPlanImgs/newTakenSpaceImg.svg');
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+  display: flex;
+  height: 100%;
+  justify-content: center;
+  align-items: center;
+
+}
+
+.ElevetorsImg {
+  background-image: url('../components/SeatingPlanImgs/newElevatorImg.svg');
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+  display: flex;
+  height: 100%;
+  justify-content: center;
+  align-items: center;
+}
+
+
+.femaleBathroom {
+  background-image: url('../components/SeatingPlanImgs/femaleBathroom.svg');
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+  display: flex;
+  height: 30%;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+.maleBathroom {
+  background-image: url('../components/SeatingPlanImgs/maleBathroom.svg');
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+  display: flex;
+  height: 30%;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+
+.centerElevators {
+  background-image: url('../components/SeatingPlanImgs/newCenterElevators.svg');
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+  display: flex;
+  height: 100%;
+  justify-content: center;
+  align-items: center;
+}
+
+.rightStairs {
+  background-image: url('../components/SeatingPlanImgs/newStairsImg.svg');
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 95%;
+  width: 50%;
+}
+
+.leftStairs {
+  background-image: url('../components/SeatingPlanImgs/newStairsImg.svg');
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+  display: flex;
+  height: 95%;
+  justify-content: center;
+  align-items: center;
+  width: 50%;
+}
+
+.kitchen {
+  background-image: url('../components/SeatingPlanImgs/kitchenImg.svg');
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+  display: flex;
+  height: 65%;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+
+
+
 
 
