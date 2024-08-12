@@ -71,7 +71,7 @@ const FullSection: React.FC<FullSectionProps> = ({
                 >
                     {assignedUser && (
                         <div className={styles.seatText}>
-                            {deskCounter}
+                            {/*{deskCounter}*/}
                             {formatUserName(assignedUser.displayName || '')}
                         </div>
                     )}
@@ -136,7 +136,7 @@ const FullSection: React.FC<FullSectionProps> = ({
                                     {assignedUser && (
                                         <div className={styles.seatText}>
                                             {formatUserName(assignedUser.displayName || '')}
-                                            {deskCounter++}
+                                            {/*{deskCounter++}*/}
                                         </div>
                                     )}
                                 </div>

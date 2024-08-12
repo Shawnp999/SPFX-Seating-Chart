@@ -197,23 +197,25 @@ const SeatingMap: React.FunctionComponent<ISeatingMapProps> = (props: ISeatingMa
                 >
                     {selectedUser ? (
                         <div>
-                            <img
-                                src={`https://eneraseg.sharepoint.com/sites/UZMTO2/foto_employees/${selectedUser.mail?.replace('@uzmto.com', '')}/profile.jpg` || NoUserPhotoUrl}
-                                alt="User Photo"
-                                onError={(e) => {
-                                    e.currentTarget.src = NoUserPhotoUrl;
-                                    e.currentTarget.style.borderRadius = '10px';
-                                    e.currentTarget.style.objectFit = 'cover';
-                                    e.currentTarget.style.width = '100%';
-                                }}
-                                style={{
-                                    width: '100%',
-                                    cursor: 'pointer',
-                                    height: '100%',
-                                    objectFit: 'cover',
-                                    borderRadius: '10px'
-                                }}
-                            />
+                            <div className={styles.photoMaxHeight}>
+                                <img
+                                    src={`https://eneraseg.sharepoint.com/sites/UZMTO2/foto_employees/${selectedUser.mail?.replace('@uzmto.com', '')}/profile.jpg` || NoUserPhotoUrl}
+                                    alt="User Photo"
+                                    onError={(e) => {
+                                        e.currentTarget.src = NoUserPhotoUrl;
+                                        e.currentTarget.style.borderRadius = '10px';
+                                        e.currentTarget.style.objectFit = 'cover';
+                                        e.currentTarget.style.width = '100%';
+                                    }}
+                                    style={{
+                                        width: '100%',
+                                        cursor: 'pointer',
+                                        height: '100%',
+                                        objectFit: 'cover',
+                                        borderRadius: '10px'
+                                    }}
+                                />
+                            </div>
                             <p>Display Name: {selectedUser.displayName}</p>
                             <p>Department: {selectedUser.department}</p>
                             <p>Internal Number(s): {selectedUser.businessPhones}</p>

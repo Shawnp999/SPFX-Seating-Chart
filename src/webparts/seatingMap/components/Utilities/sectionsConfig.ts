@@ -135,12 +135,12 @@ export const sectionsConfig: SectionConfigProps[] = [
     // Floor 2
     {
         section: 15,
-        hasMeetingRoom: false,
+        hasMeetingRoom: 'left',
         desks: [
-            { column: 1, rows: [ 2, 3, 4, 5] },
-            { column: 2, rows: [1, 2, 3, 4, 5] },
+            { column: 2, rows: [ 2, 3, 4, 5] },
             { column: 3, rows: [1, 2, 3, 4, 5] },
             { column: 4, rows: [1, 2, 3, 4, 5] },
+            { column: 5, rows: [1, 2, 3, 4, 5] },
         ],
         bossRoom: false,
     },
@@ -180,12 +180,12 @@ export const sectionsConfig: SectionConfigProps[] = [
     },
     {
         section: 19,
-        hasMeetingRoom: false,
+        hasMeetingRoom: 'right',
         desks: [
+            { column: 1, rows: [1, 2, 3, 4, 5] },
             { column: 2, rows: [1, 2, 3, 4, 5] },
             { column: 3, rows: [1, 2, 3, 4, 5] },
-            { column: 4, rows: [1, 2, 3, 4, 5] },
-            { column: 5, rows: [2, 3, 4, 5] },
+            { column: 4, rows: [2, 3, 4, 5] },
         ],
         bossRoom: false,
     },
