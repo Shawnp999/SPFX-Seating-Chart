@@ -135,7 +135,7 @@ export const sectionsConfig: SectionConfigProps[] = [
     // Floor 2
     {
         section: 15,
-        hasMeetingRoom: 'left',
+        hasMeetingRoom: 'farleft',
         desks: [
             { column: 2, rows: [ 2, 3, 4, 5] },
             { column: 3, rows: [1, 2, 3, 4, 5] },
@@ -180,7 +180,7 @@ export const sectionsConfig: SectionConfigProps[] = [
     },
     {
         section: 19,
-        hasMeetingRoom: 'right',
+        hasMeetingRoom: 'farright',
         desks: [
             { column: 1, rows: [1, 2, 3, 4, 5] },
             { column: 2, rows: [1, 2, 3, 4, 5] },

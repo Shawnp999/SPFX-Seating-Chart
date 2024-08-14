@@ -27,7 +27,7 @@ const sectionToFloorMap = {
 const getFloorBySection = (section: number) => {
     if (sectionToFloorMap[9].includes(section)) return 9;
     if (sectionToFloorMap[2].includes(section)) return 2;
-    return 9; //default to floor 9
+    return 9;
 };
 
 const SeatingMap: React.FunctionComponent<ISeatingMapProps> = (props: ISeatingMapProps) => {
@@ -119,9 +119,8 @@ const SeatingMap: React.FunctionComponent<ISeatingMapProps> = (props: ISeatingMa
         setIsDialogHidden(false);
     };
 
-    const getButtonClassName = (floor: number) => {
-        return selectedFloor === floor ? styles.selectedFloorButton : '';
-    };
+
+
 
     const handleDepartmentChange = (event: React.FormEvent<HTMLDivElement>, option?: IDropdownOption) => {
         const selectedKey = option ? option.key as string : null;
@@ -152,28 +151,66 @@ const SeatingMap: React.FunctionComponent<ISeatingMapProps> = (props: ISeatingMa
             ) : (
                 <>
 
-                <div className={styles.floorBtnCont}>
-                    <PrimaryButton className={getButtonClassName(9)} onClick={() => setSelectedFloor(9)} text="Floor 9" />
-                    <PrimaryButton className={getButtonClassName(2)} onClick={() => setSelectedFloor(2)} text="Floor 2" />
-                </div>
 
-                <Dropdown
-                    placeholder="Select a department"
-                    label="Department"
-                    options={departmentOptions}
-                    selectedKey={selectedDepartment || 'all'}
-                    onChange={handleDepartmentChange}
-                />
+                    <div className={styles.displayFlexClass}>
+                        <Dropdown
+                            placeholder="Select a department"
+                            className={styles.departmentDropdown}
+                            styles={{
+                                dropdown: {
+                                    width: '95%',
+                                    borderRadius: '15px',
+                                    borderColor: '#d9d9d9',
+                                },
+                                title: {
+                                    borderRadius: '15px',
+                                    backgroundColor: 'white',
+                                    borderColor: '#d9d9d9',
+                                    color : '#d9d9d9',
 
-                {selectedFloor === 9 && (
-                    <FloorNine
-                        sectionsConfig={sectionsConfig}
-                        users={users}
-                        onDeskClick={handleDeskClick}
-                        selectedFloor={selectedFloor}
-                        highlightedUserId={highlightedUserId}
-                        highlightedDepartment={highlightedDepartment}
-                    />
+                                },
+                                dropdownItemsWrapper: {
+                                    borderRadius: '15px',
+                                },
+                                dropdownItem: {
+                                    padding: '10px',
+                                },
+                                dropdownItemSelected: {
+                                    backgroundColor: '#d9d9d9',
+                                    color: 'white',
+                                },
+                            }}
+                            options={departmentOptions}
+                            selectedKey={selectedDepartment || 'all'}
+                            onChange={handleDepartmentChange}
+                        />
+
+
+
+                        <div className={styles.floorBtnCont}>
+                            <PrimaryButton
+                                className={`${styles.selectedFloorButton} ${selectedFloor === 9 ? styles.selected : ''}`}
+                                onClick={() => setSelectedFloor(9)}
+                                text="Floor 9"
+                            />
+                            <PrimaryButton
+                                className={`${styles.selectedFloorButtonTwo} ${selectedFloor === 2 ? styles.selected : ''}`}
+                                onClick={() => setSelectedFloor(2)}
+                                text="Floor 2"
+                            />
+                        </div>
+
+                    </div>
+
+                    {selectedFloor === 9 && (
+                        <FloorNine
+                            sectionsConfig={sectionsConfig}
+                            users={users}
+                            onDeskClick={handleDeskClick}
+                            selectedFloor={selectedFloor}
+                            highlightedUserId={highlightedUserId}
+                            highlightedDepartment={highlightedDepartment}
+                        />
                 )}
 
                 {selectedFloor === 2 && (

@@ -28,7 +28,16 @@
   border: 2px solid #d9d9d9;
   border-right: none;
   height: 100%;
+  position: relative;
 }
+
+
+
+
+
+
+
+
 
 .fullSection:last-child {
   border-right: 2px solid black;
@@ -73,6 +82,14 @@
   height: 600px;
 }
 
+.displayFlexClass {
+  display: flex;
+}
+
+.departmentDropdown{
+  display: flex;
+  width: 80%;
+}
 
 
 
@@ -184,7 +201,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  border: 1px solid grey;
+  //border: 1px solid grey;
   width: 90%;
   height: 50%;
   position: relative;
@@ -275,6 +292,7 @@
   display: flex;
   justify-content: center;
   gap: 10px;
+  width: 20%;
 }
 
 highlightedUserDesk {
@@ -282,12 +300,13 @@ highlightedUserDesk {
   box-shadow: 0 0 15px rgba(255, 0, 0, 0.7);
 }
 
-.selectedFloorButton {
-  background-color: #0894ff;
-  color: white;
+/* SeatingMap.module.scss */
+.dropdown-70 {
+  width: 95% !important;
 }
 
-// src/components/SeatingMap.module.scss
+
+
 
 .floorBtnCont {
   display: flex;
@@ -296,9 +315,41 @@ highlightedUserDesk {
 }
 
 .selectedFloorButton {
-  background-color: #0078d4; // Change to desired highlight color
+  border-radius: 20px;
+  background-color: white;
+  border: 2px solid #3e93cc;
+  color: #3e93cc;
+}
+.selectedFloorButton.selected {
+  background-color: #3e93cc;
+  color: white;
+  border-color: #3e93cc;
+}
+
+.selectedFloorButton:hover {
+  background-color: #3e93cc;
+  border: 2px solid #3e93cc;
   color: white;
 }
+
+.selectedFloorButtonTwo {
+  border-radius: 20px;
+  background-color: white;
+  border: 2px solid #9bbc51;
+  color: #9bbc51;
+}
+.selectedFloorButtonTwo.selected {
+  background-color: #9bbc51;
+  color: white;
+  border-color: #9bbc51;
+}
+
+.selectedFloorButtonTwo:hover {
+  background-color: #9bbc51;
+  color: white;
+  border-color: #9bbc51;
+}
+
 
 .departmentBtnCont {
   display: flex;
@@ -323,6 +374,12 @@ highlightedUserDesk {
   align-items: flex-start !important;
 }
 
+.emptySectionText {
+  font-family: monospace;
+  font-size: 16px;
+  color: #bfbfbf;
+}
+
 .smallDeskDown {
   background-image: url('../components/SeatingPlanImgs/newDeskDown.svg');
   background-position: center;
@@ -339,6 +396,31 @@ highlightedUserDesk {
   background-size: contain;
   display: flex;
   align-items: flex-start;
+}
+
+
+.smallDeskDownTwo {
+  background-image: url('../components/SeatingPlanImgs/newDeskDown.svg');
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+  display: flex;
+  align-self: end;
+  height: 100%;
+  width: 97%;
+  margin-top: -51%;
+}
+
+.smallDeskUpTwo {
+  background-image: url('../components/SeatingPlanImgs/newDeskUp.svg');
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+  display: flex;
+  align-self: start;
+  height: 100%;
+  width: 97%;
+  margin-top: 51%;
 }
 
 .leftDesk {
@@ -397,6 +479,33 @@ highlightedUserDesk {
   align-items: flex-end;
   height: 90%;
   width: 100%
+}
+
+.farLeftMeetingRoom{
+  background-image: url('../components/SeatingPlanImgs/rightMettingRoom.svg');
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+  display: flex;
+  align-items: flex-end;
+  height: 60%;
+  width: 100%;
+  align-self: baseline;
+
+
+}
+
+.farRightMeetingRoom{
+  background-image: url('../components/SeatingPlanImgs/leftMettingRoom.svg');
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+  display: flex;
+  align-items: flex-end;
+  height: 60%;
+  width: 100%;
+  align-self: baseline;
+
 }
 
 .takenSpaceImg {

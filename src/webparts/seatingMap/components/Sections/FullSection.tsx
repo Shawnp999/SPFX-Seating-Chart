@@ -38,11 +38,11 @@ const FullSection: React.FC<FullSectionProps> = ({
             const isHighlightedDepartment = assignedUser && highlightedDepartment && assignedUser.department === highlightedDepartment;
 
             const deskClass = selectedFloor === 2
-                ? row === 1
-                    ? styles.deskTop
-                    : row % 2 === 0
-                        ? styles.deskTop
-                        : styles.deskBottom
+                ? row === 1 || row === 3
+                    ? styles.smallDeskDownTwo
+                    : row === 2 || row === 4
+                        ? styles.smallDeskUpTwo
+                        : styles.smallDeskDownTwo
                 : '';
 
             const deskClassNine = section === 13
@@ -71,7 +71,7 @@ const FullSection: React.FC<FullSectionProps> = ({
                 >
                     {assignedUser && (
                         <div className={styles.seatText}>
-                            {/*{deskCounter}*/}
+                            {deskCounter}
                             {formatUserName(assignedUser.displayName || '')}
                         </div>
                     )}
@@ -82,7 +82,15 @@ const FullSection: React.FC<FullSectionProps> = ({
         });
     });
 
-    const meetingRoomClass = hasMeetingRoom === 'left' ? styles.rightMeetingRoom : hasMeetingRoom === 'right' ? styles.leftMeetingRoom : styles.meetingRoomTable;
+    const meetingRoomClass = hasMeetingRoom === 'left'
+        ? styles.rightMeetingRoom
+        : hasMeetingRoom === 'right'
+            ? styles.leftMeetingRoom
+            : hasMeetingRoom === 'farleft'
+                ? styles.farLeftMeetingRoom
+                : hasMeetingRoom === 'farright'
+                    ? styles.farRightMeetingRoom
+                    : styles.meetingRoomTable;
 
     const meetingRoomStyle = hasMeetingRoom === 'left'
         ? { gridColumn: '1 / 3', gridRow: '1 / 3' }
@@ -90,7 +98,12 @@ const FullSection: React.FC<FullSectionProps> = ({
             ? { gridColumn: '3 / 5', gridRow: '1 / 3' }
             : hasMeetingRoom === 'bottom'
                 ? { gridColumn: '1 / 5', gridRow: '3 / 6' }
-                : {};
+                : hasMeetingRoom === 'farleft'
+                    ? { gridColumn: '1 / 3', gridRow: '1 / 3' }
+                    : hasMeetingRoom === 'farright'
+                        ? { gridColumn: '4 / 6', gridRow: '1 / 3' }
+                        : {};
+
 
     const officeLayoutClassName = selectedFloor === 2
         ? `${styles.officeLayout} ${styles.officeLayoutTwo}`
@@ -136,7 +149,7 @@ const FullSection: React.FC<FullSectionProps> = ({
                                     {assignedUser && (
                                         <div className={styles.seatText}>
                                             {formatUserName(assignedUser.displayName || '')}
-                                            {/*{deskCounter++}*/}
+                                            {deskCounter++}
                                         </div>
                                     )}
                                 </div>
