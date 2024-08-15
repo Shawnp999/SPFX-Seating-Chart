@@ -432,8 +432,27 @@ highlightedUserDesk {
   align-items: flex-start;
 }
 
+.highlightedSeatLeftChair {
+  background-image: url('../components/SeatingPlanImgs/highlightedSeatLeftChair.svg');
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+  display: flex;
+  align-items: flex-start;
+}
+
+
 .rightDesk {
   background-image: url('../components/SeatingPlanImgs/rightDesk.svg');
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+  display: flex;
+  align-items: flex-end;
+}
+
+.highlightedSeatRightChair {
+  background-image: url('../components/SeatingPlanImgs/highlightedSeatRightChair.svg');
   background-position: center;
   background-repeat: no-repeat;
   background-size: contain;
@@ -603,6 +622,8 @@ highlightedUserDesk {
   align-items: center;
   width: 100%;
 }
+
+
 
 
 
