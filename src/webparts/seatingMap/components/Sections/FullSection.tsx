@@ -51,6 +51,7 @@ const FullSection: React.FC<FullSectionProps> = ({
         }
     }, [highlightedUserId, users, section]);
 
+    // Render normal desks
     desks.forEach(({ column, rows }) => {
         rows.forEach(row => {
             const assignedUser = users.find(user => user.section === section.toString() && user.seat === deskCounter.toString());
@@ -95,18 +96,59 @@ const FullSection: React.FC<FullSectionProps> = ({
                     onClick={() => onDeskClick(assignedUser)}
                     data-testid={`desk-${section}-${deskCounter}`}
                 >
-                    {assignedUser && (
-                        <div className={styles.seatText}>
-                            {deskCounter}
-                            {formatUserName(assignedUser.displayName || '')}
-                        </div>
-                    )}
+                    <div className={styles.seatText}>
+                        {/*{deskCounter}*/}
+                        {assignedUser && formatUserName(assignedUser.displayName || '')}
+                    </div>
                 </div>
             );
 
             deskCounter++;
         });
     });
+
+    // Render boss desks starting after the last normal desk index
+    const bossDeskStartingIndex = deskCounter;
+
+    if (bossRoom) {
+        renderedDesks.push(
+            <div
+                style={{
+                    gridColumn: '1 / 5',
+                    gridRow: '5 / 6',
+                    display: 'flex',
+                    justifyContent: 'space-around',
+                    alignItems: 'end',
+                }}
+            >
+                {[...Array(section === 14 ? 1 : 2)].map((_, i) => {
+                    const assignedUser = users.find(user => user.section === section.toString() && user.seat === (bossDeskStartingIndex + i).toString());
+                    const isHighlightedUser = assignedUser && highlightedUserId && assignedUser.id === highlightedUserId;
+                    const isHighlightedDepartment = assignedUser && highlightedDepartment && assignedUser.department === highlightedDepartment;
+                    return (
+                        <div
+                            key={`boss-${i + 1}`}
+                            ref={el => {
+                                deskRefs.current[`boss-${bossDeskStartingIndex + i}`] = el;
+                            }}
+                            className={`${styles.deskBossCenterDown} ${styles.bossDeskDown} ${styles.flexStart} 
+                                ${isHighlightedUser ? styles.bossDeskDownHighlighted : ''} 
+                                ${isHighlightedDepartment ? styles.departmentDesk : ''}`}
+
+                            style={bossDeskPosition || { gridRow: 2, gridColumn: '1 / span 2' }}
+                            onClick={() => onDeskClick(assignedUser)}
+                            data-testid={`desk-${section}-boss-${i + 1}`}
+                        >
+                            <div className={styles.seatText}>
+                                {/*{bossDeskStartingIndex + i}*/}
+                                {assignedUser && formatUserName(assignedUser.displayName || '')}
+                            </div>
+                        </div>
+                    );
+                })}
+            </div>
+        );
+    }
 
     const meetingRoomClass = hasMeetingRoom === 'left'
         ? styles.rightMeetingRoom
@@ -143,45 +185,6 @@ const FullSection: React.FC<FullSectionProps> = ({
                     </div>
                 )}
                 {renderedDesks}
-                {bossRoom && (
-                    <div
-                        style={{
-                            gridColumn: '1 / 5',
-                            gridRow: '5 / 6',
-                            display: 'flex',
-                            justifyContent: 'space-around',
-                            alignItems: 'end',
-                        }}
-                    >
-                        {[...Array(section === 14 ? 1 : 2)].map((_, i) => {
-                            const assignedUser = users.find(user => user.section === section.toString() && user.seat === deskCounter.toString());
-                            const isHighlightedUser = assignedUser && highlightedUserId && assignedUser.id === highlightedUserId;
-                            const isHighlightedDepartment = assignedUser && highlightedDepartment && assignedUser.department === highlightedDepartment;
-                            return (
-                                <div
-                                    key={`boss-${i + 1}`}
-                                    ref={el => {
-                                        deskRefs.current[`boss-${deskCounter - 1}`] = el;
-                                    }}
-                                    className={`${styles.deskBossCenterDown} ${styles.bossDeskDown} ${styles.flexStart} 
-                                        ${isHighlightedUser ? styles.bossDeskDownHighlighted : ''} 
-                                        ${isHighlightedDepartment ? styles.departmentDesk : ''}`}
-
-                                    style={bossDeskPosition || { gridRow: 2, gridColumn: '1 / span 2' }}
-                                    onClick={() => onDeskClick(assignedUser)}
-                                    data-testid={`desk-${section}-boss-${i + 1}`}
-                                >
-                                    {assignedUser && (
-                                        <div className={styles.seatText}>
-                                            {formatUserName(assignedUser.displayName || '')}
-                                            {deskCounter++}
-                                        </div>
-                                    )}
-                                </div>
-                            );
-                        })}
-                    </div>
-                )}
             </div>
         </div>
     );

@@ -64,6 +64,7 @@ const HalfSection: React.FC<HalfSectionProps> = ({
                         {assignedUser && (
                             <div className={styles.seatText}>
                                 {formatUserName(assignedUser.displayName || '')}
+                                {/*{deskCounter}*/}
                             </div>
                         )}
                     </div>
@@ -96,6 +97,7 @@ const HalfSection: React.FC<HalfSectionProps> = ({
                     {assignedUser && (
                         <div className={styles.seatText} style={setTextClassCustom}>
                             {formatUserName(assignedUser.displayName || '')}
+                            {/*{deskCounter}*/}
                         </div>
                     )}
                 </div>
@@ -109,6 +111,7 @@ const HalfSection: React.FC<HalfSectionProps> = ({
         <div className={styles.halfSection}>
             <div className={styles.officeLayoutHalf}>
                 {renderedDesks}
+
             </div>
         </div>
     );
