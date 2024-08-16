@@ -1,6 +1,6 @@
 import * as React from 'react';
 import styles from '../SeatingMap.module.scss';
-import {formatUserName, UserWithSeat as ImportedUserWithSeat} from '../Utilities/FetchUserData';
+import { formatUserName, UserWithSeat as ImportedUserWithSeat } from '../Utilities/FetchUserData';
 
 interface HalfSectionProps {
     section: number;
@@ -45,7 +45,9 @@ const HalfSection: React.FC<HalfSectionProps> = ({
             const isHighlightedUser = assignedUser && highlightedUserId && assignedUser.id === highlightedUserId;
             const isHighlightedDepartment = assignedUser && highlightedDepartment && assignedUser.department === highlightedDepartment;
 
-            const deskClass = row % 2 === 0 ? `${styles.smallDeskUp}  ${styles.positionBottom} ` : styles.smallDeskDown;
+            const deskClass = row % 2 === 0
+                ? `${isHighlightedUser ? styles.smallDeskSeatUpHighlighted : styles.smallDeskUp} ${styles.positionBottom}`
+                : `${isHighlightedUser ? styles.smallDeskSeatDownHighlighted : styles.smallDeskDown}`;
 
             renderedDesks.push(
                 <div
@@ -53,13 +55,12 @@ const HalfSection: React.FC<HalfSectionProps> = ({
                     ref={el => {
                         deskRefs.current[deskCounter - 1] = el;
                     }}
-                    className={`${styles.deskHalf} ${deskClass} ${isHighlightedUser ? styles.highlightedDesk : ''} ${isHighlightedDepartment ? styles.departmentDesk : ''}`}
+                    className={`${styles.deskHalf} ${deskClass} ${isHighlightedDepartment ? styles.departmentDesk : ''}`}
                     style={{ gridRow: row, gridColumn: column }}
                     onClick={() => onDeskClick(assignedUser)}
                     data-testid={`desk-${section}-${deskCounter}`}
                 >
                     <div className={styles.seat}>
-                        {/*{deskCounter}*/}
                         {assignedUser && (
                             <div className={styles.seatText}>
                                 {formatUserName(assignedUser.displayName || '')}
@@ -77,8 +78,8 @@ const HalfSection: React.FC<HalfSectionProps> = ({
         const assignedUser = users.find(user => user.section === section.toString() && user.seat === deskCounter.toString());
         const isHighlightedUser = assignedUser && highlightedUserId && assignedUser.id === highlightedUserId;
         const isHighlightedDepartment = assignedUser && highlightedDepartment && assignedUser.department === highlightedDepartment;
-        const setClassCustom = {justifyContent : 'center' , display : 'flex' };
-        const setTextClassCustom = {maxWidth : '80%'};
+        const setClassCustom = { justifyContent: 'center', display: 'flex' };
+        const setTextClassCustom = { maxWidth: '80%' };
 
         renderedDesks.push(
             <div
@@ -86,15 +87,14 @@ const HalfSection: React.FC<HalfSectionProps> = ({
                 ref={el => {
                     deskRefs.current[deskCounter - 1] = el;
                 }}
-                className={`${styles.deskBossCenterUp} ${styles.bossDeskUp} ${isHighlightedUser ? styles.highlightedDesk : ''} ${isHighlightedDepartment ? styles.departmentDesk : ''}`}
+                className={`${styles.deskBossCenterUp} ${styles.bossDeskUp} ${isHighlightedUser ? styles.BossDeskupHighlighted : ''} ${isHighlightedDepartment ? styles.departmentDesk : ''}`}
                 style={bossDeskPosition || { gridRow: 2, gridColumn: '1 / span 2' }}
                 onClick={() => onDeskClick(assignedUser)}
                 data-testid={`desk-${section}-${deskCounter}`}
             >
                 <div className={styles.seat} style={setClassCustom}>
-                    {/*{deskCounter}*/}
                     {assignedUser && (
-                        <div className={styles.seatText} style={setTextClassCustom} >
+                        <div className={styles.seatText} style={setTextClassCustom}>
                             {formatUserName(assignedUser.displayName || '')}
                         </div>
                     )}
@@ -106,7 +106,7 @@ const HalfSection: React.FC<HalfSectionProps> = ({
     }
 
     return (
-        <div className={styles.halfSection} >
+        <div className={styles.halfSection}>
             <div className={styles.officeLayoutHalf}>
                 {renderedDesks}
             </div>

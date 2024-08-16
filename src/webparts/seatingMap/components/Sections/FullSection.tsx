@@ -27,9 +27,29 @@ const FullSection: React.FC<FullSectionProps> = ({
                                                      highlightedUserId,
                                                      highlightedDepartment,
                                                  }) => {
-    const deskRefs = React.useRef<(HTMLDivElement | null)[]>([]);
+    const deskRefs = React.useRef<{ [key: string]: HTMLDivElement | null }>({});
     const renderedDesks: JSX.Element[] = [];
     let deskCounter = 1;
+
+    React.useEffect(() => {
+        if (highlightedUserId) {
+            const highlightedUser = users.find(user => user.id === highlightedUserId);
+            if (highlightedUser && highlightedUser.seat) {
+                const deskKey = `${section}-${highlightedUser.seat}`;
+                const highlightedDesk = deskRefs.current[deskKey];
+
+                if (highlightedDesk) {
+                    highlightedDesk.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                } else {
+                    const bossDeskKey = `boss-${highlightedUser.seat}`;
+                    const highlightedBossDesk = deskRefs.current[bossDeskKey];
+                    if (highlightedBossDesk) {
+                        highlightedBossDesk.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }
+                }
+            }
+        }
+    }, [highlightedUserId, users, section]);
 
     desks.forEach(({ column, rows }) => {
         rows.forEach(row => {
@@ -37,32 +57,38 @@ const FullSection: React.FC<FullSectionProps> = ({
             const isHighlightedUser = assignedUser && highlightedUserId && assignedUser.id === highlightedUserId;
             const isHighlightedDepartment = assignedUser && highlightedDepartment && assignedUser.department === highlightedDepartment;
 
-            const deskClass = selectedFloor === 2
-                ? row === 1 || row === 3
-                    ? styles.smallDeskDownTwo
-                    : row === 2 || row === 4
-                        ? styles.smallDeskUpTwo
-                        : styles.smallDeskDownTwo
-                : '';
-
-            const deskClassNine = section === 13
-                ? column % 2 !== 0
-                    ? `${styles.rightDesk} ${styles.deskEven}`
-                    : `${styles.leftDesk} ${styles.deskOdd}`
-                : column % 2 === 0
-                    ? `${styles.rightDesk} ${styles.deskEven}`
-                    : `${styles.leftDesk} ${styles.deskOdd}`;
-
+            let deskClass = '';
+            if (selectedFloor === 2) {
+                if (row === 1 || row === 3) {
+                    deskClass = isHighlightedUser
+                        ? styles.smallDeskSeatDownHighlighted
+                        : styles.smallDeskDownTwo;
+                } else if (row === 2 || row === 4) {
+                    deskClass = isHighlightedUser
+                        ? styles.smallDeskSeatUpHighlighted
+                        : styles.smallDeskUpTwo;
+                } else {
+                    deskClass = styles.smallDeskDownTwo;
+                }
+            } else {
+                deskClass = section === 13
+                    ? column % 2 !== 0
+                        ? isHighlightedUser ? styles.highlightedSeatRightChair : `${styles.rightDesk} ${styles.deskEven}`
+                        : isHighlightedUser ? styles.highlightedSeatLeftChair : `${styles.leftDesk} ${styles.deskOdd}`
+                    : column % 2 === 0
+                        ? isHighlightedUser ? styles.highlightedSeatRightChair : `${styles.rightDesk} ${styles.deskEven}`
+                        : isHighlightedUser ? styles.highlightedSeatLeftChair : `${styles.leftDesk} ${styles.deskOdd}`;
+            }
 
             const className = selectedFloor === 2
-                ? `${styles.deskFloorTwo} ${deskClass} ${isHighlightedUser ? styles.highlightedDesk : ''} ${isHighlightedDepartment ? styles.departmentDesk : ''}`
-                : `${styles.desk} ${styles.deskVertical} ${deskClassNine} ${isHighlightedUser ? styles.highlightedDesk : ''} ${isHighlightedDepartment ? styles.departmentDesk : ''}`;
+                ? `${styles.deskFloorTwo} ${deskClass} ${isHighlightedDepartment ? styles.departmentDesk : ''}`
+                : `${styles.desk} ${styles.deskVertical} ${deskClass} ${isHighlightedDepartment ? styles.departmentDesk : ''}`;
 
             renderedDesks.push(
                 <div
                     key={`${column}-${row}`}
                     ref={el => {
-                        deskRefs.current[deskCounter - 1] = el;
+                        deskRefs.current[`${section}-${deskCounter}`] = el;
                     }}
                     className={className}
                     style={{ gridRow: row, gridColumn: column }}
@@ -104,7 +130,6 @@ const FullSection: React.FC<FullSectionProps> = ({
                         ? { gridColumn: '4 / 6', gridRow: '1 / 3' }
                         : {};
 
-
     const officeLayoutClassName = selectedFloor === 2
         ? `${styles.officeLayout} ${styles.officeLayoutTwo}`
         : `${styles.officeLayout}`;
@@ -113,13 +138,10 @@ const FullSection: React.FC<FullSectionProps> = ({
         <div className={styles.fullSection}>
             <div className={officeLayoutClassName}>
                 {hasMeetingRoom && (
-
                     <div className={styles.meetingRoom} style={meetingRoomStyle}>
                         <div className={meetingRoomClass}></div>
                     </div>
-
                 )}
-
                 {renderedDesks}
                 {bossRoom && (
                     <div
@@ -139,10 +161,13 @@ const FullSection: React.FC<FullSectionProps> = ({
                                 <div
                                     key={`boss-${i + 1}`}
                                     ref={el => {
-                                        deskRefs.current[deskCounter - 1] = el;
+                                        deskRefs.current[`boss-${deskCounter - 1}`] = el;
                                     }}
-                                    className={`${styles.deskBossCenterDown} ${styles.bossDeskDown} ${styles.flexStart} ${isHighlightedUser ? styles.highlightedDesk : ''} ${isHighlightedDepartment ? styles.departmentDesk : ''}`}
-                                    style={bossDeskPosition || { gridRow: 2, gridColumn: '1 / span 2' } }
+                                    className={`${styles.deskBossCenterDown} ${styles.bossDeskDown} ${styles.flexStart} 
+                                        ${isHighlightedUser ? styles.bossDeskDownHighlighted : ''} 
+                                        ${isHighlightedDepartment ? styles.departmentDesk : ''}`}
+
+                                    style={bossDeskPosition || { gridRow: 2, gridColumn: '1 / span 2' }}
                                     onClick={() => onDeskClick(assignedUser)}
                                     data-testid={`desk-${section}-boss-${i + 1}`}
                                 >

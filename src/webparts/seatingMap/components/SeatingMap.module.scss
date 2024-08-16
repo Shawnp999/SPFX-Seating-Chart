@@ -52,7 +52,7 @@
 }
 
 .seatText {
-  font-size: 10px;
+  font-size: 8px;
   font-weight: 500;
   text-wrap: balance;
   text-align: center;
@@ -110,6 +110,7 @@
 .positionBottom {
   display :flex;
   align-items: flex-end !important;
+
 }
 
 .positionLeft {
@@ -381,7 +382,7 @@ highlightedUserDesk {
 }
 
 .smallDeskDown {
-  background-image: url('../components/SeatingPlanImgs/newDeskDown.svg');
+  background-image: url('../components/SeatingPlanImgs/smallDeskSeatDown.svg');
   background-position: center;
   background-repeat: no-repeat;
   background-size: contain;
@@ -389,8 +390,28 @@ highlightedUserDesk {
   align-items: flex-start;
 }
 
+.smallDeskSeatDownHighlighted {
+  background-image: url('../components/SeatingPlanImgs/smallDeskSeatDownHighlighted.svg');
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+  display: flex;
+  align-items: flex-start;
+}
+
+
+
 .smallDeskUp {
-  background-image: url('../components/SeatingPlanImgs/newDeskUp.svg');
+  background-image: url('../components/SeatingPlanImgs/smallDeskSeatUp.svg');
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+  display: flex;
+  align-items: flex-start;
+}
+
+.smallDeskSeatUpHighlighted {
+  background-image: url('../components/SeatingPlanImgs/smallDeskSeatUpHighlighted.svg');
   background-position: center;
   background-repeat: no-repeat;
   background-size: contain;
@@ -411,8 +432,34 @@ highlightedUserDesk {
   margin-top: -51%;
 }
 
+.smallDeskSeatDownHighlighted {
+  background-image: url('../components/SeatingPlanImgs/smallDeskSeatDownHighlighted.svg');
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+  display: flex;
+  align-self: end;
+  height: 100%;
+  width: 97%;
+  margin-top: -51%;
+}
+
+
+
 .smallDeskUpTwo {
   background-image: url('../components/SeatingPlanImgs/newDeskUp.svg');
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+  display: flex;
+  align-self: start;
+  height: 100%;
+  width: 97%;
+  margin-top: 51%;
+}
+
+.smallDeskSeatUpHighlighted {
+  background-image: url('../components/SeatingPlanImgs/smallDeskSeatUpHighlighted.svg');
   background-position: center;
   background-repeat: no-repeat;
   background-size: contain;
@@ -469,6 +516,15 @@ highlightedUserDesk {
   align-items: flex-end;
 }
 
+.bossDeskDownHighlighted {
+  background-image: url('../components/SeatingPlanImgs/BoddDeskDownHighlighted.svg');
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+  display: flex;
+  align-items: flex-end;
+}
+
 .bossDeskUp {
   background-image: url('../components/SeatingPlanImgs/bossDeskUp.svg');
   background-position: center;
@@ -477,6 +533,17 @@ highlightedUserDesk {
   display: flex;
   align-items: flex-end;
 }
+
+.BossDeskupHighlighted {
+  background-image: url('../components/SeatingPlanImgs/BossDeskupHighlighted.svg');
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+  display: flex;
+  align-items: flex-end;
+}
+
+// FINISH THE HIGHLIGHTING SELECTED DESKS, BOSSES, HALF SECTION AND 2ND FLOOR. ALSO AUTOSLIDE TO SELECTED DEPARTMENT SECTION
 
 .leftMeetingRoom {
   background-image: url('../components/SeatingPlanImgs/leftMettingRoom.svg');
