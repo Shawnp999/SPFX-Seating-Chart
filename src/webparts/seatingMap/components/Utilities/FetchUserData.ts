@@ -7,7 +7,6 @@ interface ExcelRow {
     section: number;
     seat: number;
     userEmails: string;
-
 }
 
 export interface UserWithSeat extends User {
@@ -22,7 +21,6 @@ const fetchExcelData = async (client: MSGraphClientV3): Promise<any[]> => {
             .get();
         const values = response?.values || [];
         return values;
-        //console.log(values)
     } catch (error) {
         console.error("Error fetching Excel data:", error);
         throw error;
@@ -32,14 +30,14 @@ const fetchExcelData = async (client: MSGraphClientV3): Promise<any[]> => {
 const processData = (excelData: any): ExcelRow[] => {
     if (Array.isArray(excelData) && excelData.length > 0) {
         const mappedData: ExcelRow[] = excelData.map((row: any) => ({
-            nameRus: row[0],
-            FIO: row[1],
-            userEmails: row[7],
+            nameRus: row[0] || '',
+            FIO: row[1] || '',
+            userEmails: row[7] || '',
             seat: row[10],
             section: row[11],
         }));
         return mappedData;
-        //console.log('mappedData',mappedData)
+        console.log(mappedData,'mappedData')
     } else {
         console.log("Excel data is empty or not an array.");
         return [];
@@ -51,9 +49,13 @@ const findUserByUsernameOrEmail = (data: ExcelRow[], user: User): ExcelRow | und
     const principalName = user.userPrincipalName?.split('@')[0] || '';
 
     return data.find((excelUser) => {
-        const trimmedUserRus = excelUser.nameRus.trim();
-        const trimmedUserFIO = excelUser.FIO.trim();
-        const excelEmails = excelUser.userEmails.split(',').map(email => email.trim().split('@')[0]);
+        const trimmedUserRus = excelUser.nameRus?.trim() || '';
+        const trimmedUserFIO = excelUser.FIO?.trim() || '';
+        
+        // Safe handling of userEmails - check if it's a string before splitting
+        const excelEmails = (excelUser.userEmails && typeof excelUser.userEmails === 'string') 
+            ? excelUser.userEmails.split(',').map(email => email.trim().split('@')[0])
+            : [];
 
         return trimmedUserRus === trimmedDisplayName
             || trimmedUserFIO === trimmedDisplayName
@@ -81,12 +83,14 @@ const matchUsersWithExcelData = async (client: MSGraphClientV3): Promise<UserWit
             const excelUser = findUserByUsernameOrEmail(processedExcelData, user);
             return {
                 ...user,
-                seat: excelUser?.seat.toString(),
-                section: excelUser?.section.toString()
+                seat: excelUser?.seat?.toString(),
+                section: excelUser?.section?.toString()
             };
         });
 
         return matchedUsers;
+
+        console.log(matchedUsers,'matchedUsers')
     } catch (error) {
         console.error("Error matching users with Excel data:", error);
         throw error;

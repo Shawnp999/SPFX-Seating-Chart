@@ -34,14 +34,20 @@
       }
     ],
     "webApiPermissionRequests": [
+      
       {
         "resource": "Microsoft Graph",
-        "scope": "Directory.ReadWrite.All"
+        "scope": "Files.Read.All"
       },
       {
         "resource": "Microsoft Graph",
-        "scope": "Files.ReadWrite"
+        "scope": "User.Read.All"
+      },
+      {
+        "resource": "Microsoft Graph",
+        "scope": "User.Read"
       }
+      
     ]
   },
   "paths": {
