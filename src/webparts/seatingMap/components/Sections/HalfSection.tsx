@@ -29,6 +29,12 @@ const HalfSection: React.FC<HalfSectionProps> = ({
     const renderedDesks: JSX.Element[] = [];
     let deskCounter = 1;
 
+    // Check if current user is one of the two special users
+    const params = new URLSearchParams(window.location.search);
+    const currentUserId = params.get("userId");
+    const showDebugInfo = currentUserId === '35017994-7401-4011-bee5-9d74e9454516' || 
+                          currentUserId === 'b947e7da-7da9-4200-9046-ca0b3b3d9f7a';
+
     React.useEffect(() => {
         if (highlightedUserId) {
             const highlightedDesk = deskRefs.current.find(
@@ -63,8 +69,12 @@ const HalfSection: React.FC<HalfSectionProps> = ({
                     <div className={styles.seat}>
                         {assignedUser && (
                             <div className={styles.seatText}>
+                                {showDebugInfo && (
+                                    <>
+                                        {deskCounter}&nbsp;
+                                    </>
+                                )}
                                 {formatUserName(assignedUser.displayName || '')}
-                                {/*{deskCounter}*/}
                             </div>
                         )}
                     </div>
@@ -80,7 +90,6 @@ const HalfSection: React.FC<HalfSectionProps> = ({
         const isHighlightedUser = assignedUser && highlightedUserId && assignedUser.id === highlightedUserId;
         const isHighlightedDepartment = assignedUser && highlightedDepartment && assignedUser.department === highlightedDepartment;
         const setClassCustom = { justifyContent: 'center', display: 'flex' };
-        const setTextClassCustom = { maxWidth: '80%' };
 
         renderedDesks.push(
             <div
@@ -95,9 +104,13 @@ const HalfSection: React.FC<HalfSectionProps> = ({
             >
                 <div className={styles.seat} style={setClassCustom}>
                     {assignedUser && (
-                        <div className={styles.seatText} style={setTextClassCustom}>
+                        <div className={styles.seatText}>
+                            {showDebugInfo && (
+                                <>
+                                    {deskCounter}&nbsp;
+                                </>
+                            )}
                             {formatUserName(assignedUser.displayName || '')}
-                            {/*{deskCounter}*/}
                         </div>
                     )}
                 </div>
@@ -110,8 +123,8 @@ const HalfSection: React.FC<HalfSectionProps> = ({
     return (
         <div className={styles.halfSection}>
             <div className={styles.officeLayoutHalf}>
+                {showDebugInfo && <div>Section : {section} </div>}
                 {renderedDesks}
-
             </div>
         </div>
     );

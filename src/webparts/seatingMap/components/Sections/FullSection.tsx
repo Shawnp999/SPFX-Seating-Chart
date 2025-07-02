@@ -31,6 +31,12 @@ const FullSection: React.FC<FullSectionProps> = ({
     const renderedDesks: JSX.Element[] = [];
     let deskCounter = 1;
 
+    // Check if current user is one of the two special users
+    const params = new URLSearchParams(window.location.search);
+    const currentUserId = params.get("userId");
+    const showDebugInfo = currentUserId === '35017994-7401-4011-bee5-9d74e9454516' || 
+                          currentUserId === 'b947e7da-7da9-4200-9046-ca0b3b3d9f7a';
+
     React.useEffect(() => {
         if (highlightedUserId) {
             const highlightedUser = users.find(user => user.id === highlightedUserId);
@@ -97,7 +103,11 @@ const FullSection: React.FC<FullSectionProps> = ({
                     data-testid={`desk-${section}-${deskCounter}`}
                 >
                     <div className={styles.seatText}>
-                        {/*{deskCounter}*/}
+                        {showDebugInfo && (
+                            <>
+                                {deskCounter}&nbsp;
+                            </>
+                        )}
                         {assignedUser && formatUserName(assignedUser.displayName || '')}
                     </div>
                 </div>
@@ -140,7 +150,11 @@ const FullSection: React.FC<FullSectionProps> = ({
                             data-testid={`desk-${section}-boss-${i + 1}`}
                         >
                             <div className={styles.seatText}>
-                                {/*{bossDeskStartingIndex + i}*/}
+                                {showDebugInfo && (
+                                    <>
+                                        {bossDeskStartingIndex + i}&nbsp;
+                                    </>
+                                )}
                                 {assignedUser && formatUserName(assignedUser.displayName || '')}
                             </div>
                         </div>
@@ -179,6 +193,7 @@ const FullSection: React.FC<FullSectionProps> = ({
     return (
         <div className={styles.fullSection}>
             <div className={officeLayoutClassName}>
+                {showDebugInfo && <div>Section : {section} </div>}
                 {hasMeetingRoom && (
                     <div className={styles.meetingRoom} style={meetingRoomStyle}>
                         <div className={meetingRoomClass}></div>
