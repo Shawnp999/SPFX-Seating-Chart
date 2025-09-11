@@ -13,29 +13,30 @@ interface FullSectionProps {
     bossDeskPosition?: { gridRow: number; gridColumn: string };
     highlightedUserId: string | null;
     highlightedDepartment: string | null;
+    currentUserId?: string;
 }
 
 const FullSection: React.FC<FullSectionProps> = ({
-                                                     section,
-                                                     hasMeetingRoom,
-                                                     desks,
-                                                     bossRoom,
-                                                     users,
-                                                     onDeskClick,
-                                                     selectedFloor,
-                                                     bossDeskPosition,
-                                                     highlightedUserId,
-                                                     highlightedDepartment,
-                                                 }) => {
+    section,
+    hasMeetingRoom,
+    desks,
+    bossRoom,
+    users,
+    onDeskClick,
+    selectedFloor,
+    bossDeskPosition,
+    highlightedUserId,
+    highlightedDepartment,
+    currentUserId,
+}) => {
     const deskRefs = React.useRef<{ [key: string]: HTMLDivElement | null }>({});
     const renderedDesks: JSX.Element[] = [];
     let deskCounter = 1;
 
     // Check if current user is one of the two special users
-    const params = new URLSearchParams(window.location.search);
-    const currentUserId = params.get("userId");
     const showDebugInfo = currentUserId === '35017994-7401-4011-bee5-9d74e9454516' || 
-                          currentUserId === 'b947e7da-7da9-4200-9046-ca0b3b3d9f7a';
+                         currentUserId === 'b947e7da-7da9-4200-9046-ca0b3b3d9f7a' || 
+                         currentUserId === 'd74c2ed9-0a7c-4929-b184-9e1beae268d7';  
 
     React.useEffect(() => {
         if (highlightedUserId) {
@@ -103,12 +104,14 @@ const FullSection: React.FC<FullSectionProps> = ({
                     data-testid={`desk-${section}-${deskCounter}`}
                 >
                     <div className={styles.seatText}>
-                        {showDebugInfo && (
+                        {showDebugInfo ? (
                             <>
                                 {deskCounter}&nbsp;
+                                {assignedUser && formatUserName(assignedUser.displayName || '')}
                             </>
+                        ) : (
+                            assignedUser && formatUserName(assignedUser.displayName || '')
                         )}
-                        {assignedUser && formatUserName(assignedUser.displayName || '')}
                     </div>
                 </div>
             );
@@ -144,18 +147,19 @@ const FullSection: React.FC<FullSectionProps> = ({
                             className={`${styles.deskBossCenterDown} ${styles.bossDeskDown} ${styles.flexStart} 
                                 ${isHighlightedUser ? styles.bossDeskDownHighlighted : ''} 
                                 ${isHighlightedDepartment ? styles.departmentDesk : ''}`}
-
                             style={bossDeskPosition || { gridRow: 2, gridColumn: '1 / span 2' }}
                             onClick={() => onDeskClick(assignedUser)}
                             data-testid={`desk-${section}-boss-${i + 1}`}
                         >
                             <div className={styles.seatText}>
-                                {showDebugInfo && (
+                                {showDebugInfo ? (
                                     <>
                                         {bossDeskStartingIndex + i}&nbsp;
+                                        {assignedUser && formatUserName(assignedUser.displayName || '')}
                                     </>
+                                ) : (
+                                    assignedUser && formatUserName(assignedUser.displayName || '')
                                 )}
-                                {assignedUser && formatUserName(assignedUser.displayName || '')}
                             </div>
                         </div>
                     );
@@ -193,7 +197,7 @@ const FullSection: React.FC<FullSectionProps> = ({
     return (
         <div className={styles.fullSection}>
             <div className={officeLayoutClassName}>
-                {showDebugInfo && <div>Section : {section} </div>}
+                {showDebugInfo && <div>Section : {section}</div>}
                 {hasMeetingRoom && (
                     <div className={styles.meetingRoom} style={meetingRoomStyle}>
                         <div className={meetingRoomClass}></div>

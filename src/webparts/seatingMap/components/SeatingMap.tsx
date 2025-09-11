@@ -38,7 +38,10 @@ const SeatingMap: React.FunctionComponent<ISeatingMapProps> = (props: ISeatingMa
     const [highlightedUserId, setHighlightedUserId] = useState<string | null>(null);
     const [highlightedDepartment, setHighlightedDepartment] = useState<string | null>(null);
     const [selectedDepartment, setSelectedDepartment] = useState<string | null>(null);
-    const [isLoading , setIsLoading] = useState(true);
+    const [isLoading, setIsLoading] = useState(true);
+    const [errorMessage, setErrorMessage] = useState<string | null>(null);
+    const [errorLogs, setErrorLogs] = useState<string[]>([]);
+    const [currentUserId, setCurrentUserId] = useState<string | undefined>(undefined);
 
     const orgStructure = new OrgStructure();
     orgStructure.init();
@@ -49,6 +52,42 @@ const SeatingMap: React.FunctionComponent<ISeatingMapProps> = (props: ISeatingMa
         orgStructureMap.set(dep.departmentAAD, dep.departmentName);
     });
 
+    const fetchData = async () => {
+        setIsLoading(true);
+        setErrorMessage(null);
+        setErrorLogs([]);
+        try {
+            const graphClient = await props.context.msGraphClientFactory.getClient('3');
+            // Fetch current user's ID
+            const currentUser = await graphClient.api('/me').select('id').get();
+            console.log('Current User ID:', currentUser.id);
+            setCurrentUserId(currentUser.id);
+
+            const matchedUsers = await matchUsersWithExcelData(graphClient);
+            setUsers(matchedUsers);
+
+            if (highlightedUserId) {
+                const user = matchedUsers.find(u => u.id === highlightedUserId);
+                if (user && user.section) {
+                    const userSection = parseInt(user.section, 10);
+                    const floor = getFloorBySection(userSection);
+                    setSelectedFloor(floor);
+                }
+            }
+        } catch (error) {
+            console.error("Error fetching data:", error);
+            if (error instanceof Error) {
+                setErrorMessage(error.message);
+                setErrorLogs(error.stack?.split('\n') || [error.message]);
+            } else {
+                setErrorMessage("An unexpected error occurred. Please try again later.");
+                setErrorLogs(["Unknown error occurred"]);
+            }
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
     useEffect(() => {
         const params = new URLSearchParams(window.location.search);
         const userId = params.get("userId");
@@ -56,39 +95,8 @@ const SeatingMap: React.FunctionComponent<ISeatingMapProps> = (props: ISeatingMa
             setHighlightedUserId(userId);
         }
 
-        const fetchData = async () => {
-            setIsLoading(true);
-            try {
-                const graphClient = await props.context.msGraphClientFactory.getClient('3');
-                const matchedUsers = await matchUsersWithExcelData(graphClient);
-                setUsers(matchedUsers);
-                //console.log('Matched users:', matchedUsers);
-
-                if (highlightedUserId) {
-                    const user = matchedUsers.find(u => u.id === highlightedUserId);
-                    if (user && user.section) {
-                        const userSection = parseInt(user.section, 10);
-                        const floor = getFloorBySection(userSection);
-                        setSelectedFloor(floor);
-                    }
-                }
-            } catch (error) {
-                console.error("Error fetching data:", error);
-            } finally {
-                setIsLoading(false);
-            }
-        };
-
         fetchData().catch(error => console.error("Unhandled error in fetchData:", error));
     }, [highlightedUserId]);
-
-    useEffect(() => {
-        if (selectedDepartment) {
-            setHighlightedUserId(null);
-        }
-    }, [selectedDepartment]);
-
-
 
     const correctUserDepartmentName = (incorrectDepartmentName: MicrosoftGraph.NullableOption<string> | undefined): string => {
         if (incorrectDepartmentName === null || incorrectDepartmentName === undefined) {
@@ -119,14 +127,11 @@ const SeatingMap: React.FunctionComponent<ISeatingMapProps> = (props: ISeatingMa
         setIsDialogHidden(false);
     };
 
-
-
-
     const handleDepartmentChange = (event: React.FormEvent<HTMLDivElement>, option?: IDropdownOption) => {
         const selectedKey = option ? option.key as string : null;
         setSelectedDepartment(selectedKey);
         setHighlightedDepartment(selectedKey);
-        setHighlightedUserId(null); //clear highlighted user when dep change
+        setHighlightedUserId(null); // Clear highlighted user when department changes
     };
 
     const uniqueDepartments = Array.from(new Set(users
@@ -148,10 +153,23 @@ const SeatingMap: React.FunctionComponent<ISeatingMapProps> = (props: ISeatingMa
                         alt="Loading..."
                     />
                 </div>
+            ) : errorMessage ? (
+                <div className={styles.errorContainer}>
+                    <p>{errorMessage}</p>
+                    <PrimaryButton onClick={() => fetchData()} text="Retry" />
+                    {errorLogs.length > 0 && (
+                        <div className={styles.errorLogs}>
+                            <h4>Error Details:</h4>
+                            <pre>
+                                {errorLogs.map((log, index) => (
+                                    <div key={index}>{log}</div>
+                                ))}
+                            </pre>
+                        </div>
+                    )}
+                </div>
             ) : (
                 <>
-
-
                     <div className={styles.displayFlexClass}>
                         <Dropdown
                             placeholder="Select a department"
@@ -166,8 +184,7 @@ const SeatingMap: React.FunctionComponent<ISeatingMapProps> = (props: ISeatingMa
                                     borderRadius: '15px',
                                     backgroundColor: 'white',
                                     borderColor: '#d9d9d9',
-                                    color : '#d9d9d9',
-
+                                    color: '#d9d9d9',
                                 },
                                 dropdownItemsWrapper: {
                                     borderRadius: '15px',
@@ -185,8 +202,6 @@ const SeatingMap: React.FunctionComponent<ISeatingMapProps> = (props: ISeatingMa
                             onChange={handleDepartmentChange}
                         />
 
-
-
                         <div className={styles.floorBtnCont}>
                             <PrimaryButton
                                 className={`${styles.selectedFloorButton} ${selectedFloor === 9 ? styles.selected : ''}`}
@@ -199,7 +214,6 @@ const SeatingMap: React.FunctionComponent<ISeatingMapProps> = (props: ISeatingMa
                                 text="Floor 2"
                             />
                         </div>
-
                     </div>
 
                     {selectedFloor === 9 && (
@@ -210,70 +224,70 @@ const SeatingMap: React.FunctionComponent<ISeatingMapProps> = (props: ISeatingMa
                             selectedFloor={selectedFloor}
                             highlightedUserId={highlightedUserId}
                             highlightedDepartment={highlightedDepartment}
+                            currentUserId={currentUserId}
                         />
-                )}
-
-                {selectedFloor === 2 && (
-                    <FloorTwo
-                        sectionsConfig={sectionsConfig}
-                        users={users}
-                        onDeskClick={handleDeskClick}
-                        selectedFloor={selectedFloor}
-                        highlightedUserId={highlightedUserId}
-                        highlightedDepartment={highlightedDepartment}
-                    />
-                )}
-
-                <Dialog
-                    hidden={isDialogHidden}
-                    onDismiss={() => setIsDialogHidden(true)}
-                    dialogContentProps={{
-                        type: DialogType.largeHeader,
-                        title: 'User Details',
-                    }}
-                >
-                    {selectedUser ? (
-                        <div>
-                            <div className={styles.photoMaxHeight}>
-                                <img
-                                    src={`https://eneraseg.sharepoint.com/sites/UZMTO2/foto_employees/${selectedUser.mail?.replace('@uzmto.com', '')}/profile.jpg` || NoUserPhotoUrl}
-                                    alt="User Photo"
-                                    onError={(e) => {
-                                        e.currentTarget.src = NoUserPhotoUrl;
-                                        e.currentTarget.style.borderRadius = '10px';
-                                        e.currentTarget.style.objectFit = 'cover';
-                                        e.currentTarget.style.width = '100%';
-                                    }}
-                                    style={{
-                                        width: '100%',
-                                        cursor: 'pointer',
-                                        height: '100%',
-                                        objectFit: 'cover',
-                                        borderRadius: '10px'
-                                    }}
-                                />
-                            </div>
-                            <p>Display Name: {selectedUser.displayName}</p>
-                            <p>Department: {selectedUser.department}</p>
-                            <p>Internal Number(s): {selectedUser.businessPhones}</p>
-                        </div>
-                    ) : (
-                        <p>No user found for this seat.</p>
                     )}
-                    <DialogFooter>
 
-                        {selectedUser && typeof selectedUser.id === 'string' && selectedUser.id.length > 0 && (
-                            <DefaultButton
-                                href={`https://eneraseg.sharepoint.com/sites/UZMTO2/SitePages/profile-page.aspx?userId=${selectedUser.id}`}
-                                text="See Profile"
-                            />
+                    {selectedFloor === 2 && (
+                        <FloorTwo
+                            sectionsConfig={sectionsConfig}
+                            users={users}
+                            onDeskClick={handleDeskClick}
+                            selectedFloor={selectedFloor}
+                            highlightedUserId={highlightedUserId}
+                            highlightedDepartment={highlightedDepartment}
+                            currentUserId={currentUserId}
+                        />
+                    )}
+
+                    <Dialog
+                        hidden={isDialogHidden}
+                        onDismiss={() => setIsDialogHidden(true)}
+                        dialogContentProps={{
+                            type: DialogType.largeHeader,
+                            title: 'User Details',
+                        }}
+                    >
+                        {selectedUser ? (
+                            <div>
+                                <div className={styles.photoMaxHeight}>
+                                    <img
+                                        src={`https://eneraseg.sharepoint.com/sites/UZMTO2/foto_employees/${selectedUser.mail?.replace('@uzmto.com', '')}/profile.jpg` || NoUserPhotoUrl}
+                                        alt="User Photo"
+                                        onError={(e) => {
+                                            e.currentTarget.src = NoUserPhotoUrl;
+                                            e.currentTarget.style.borderRadius = '10px';
+                                            e.currentTarget.style.objectFit = 'cover';
+                                            e.currentTarget.style.width = '100%';
+                                        }}
+                                        style={{
+                                            width: '100%',
+                                            cursor: 'pointer',
+                                            height: '100%',
+                                            objectFit: 'cover',
+                                            borderRadius: '10px'
+                                        }}
+                                    />
+                                </div>
+                                <p>Display Name: {selectedUser.displayName}</p>
+                                <p>Department: {selectedUser.department}</p>
+                                <p>Internal Number(s): {selectedUser.businessPhones}</p>
+                            </div>
+                        ) : (
+                            <p>No user found for this seat.</p>
                         )}
-
-                        <DefaultButton onClick={() => setIsDialogHidden(true)} text="Close" />
-                    </DialogFooter>
-                </Dialog>
+                        <DialogFooter>
+                            {selectedUser && typeof selectedUser.id === 'string' && selectedUser.id.length > 0 && (
+                                <DefaultButton
+                                    href={`https://eneraseg.sharepoint.com/sites/UZMTO2/SitePages/profile-page.aspx?userId=${selectedUser.id}`}
+                                    text="See Profile"
+                                />
+                            )}
+                            <DefaultButton onClick={() => setIsDialogHidden(true)} text="Close" />
+                        </DialogFooter>
+                    </Dialog>
                 </>
-                )}
+            )}
         </div>
     );
 };
