@@ -20,7 +20,7 @@ const fetchExcelData = async (client: MSGraphClientV3): Promise<any[]> => {
             .api(`https://graph.microsoft.com/beta/sites/eneraseg.sharepoint.com,78d24909-8203-47e2-8f6c-d52b62b39808,5cb48ff4-9da9-4b5b-8ef2-051960c7a180/drives/b!CUnSeAOC4kePbNUrYrOYCPSPtFypnVtLjvIFGWDHoYDXrKfhI9hcRIVAQOzb0i9W/items/017OOUJUBXHLJDZ7O63VD3ZHUVVJOG7BEU/workbook/worksheets('{517B3F23-7EC3-40AE-8DCF-0C986B6D5233}')/range(address='B1:M220')`)
             .get();
         const values = response?.values || [];
-        console.log('values',values)
+        console.log('values', values)
         return values;
     } catch (error) {
         console.error("Error fetching Excel data:", error);
@@ -31,11 +31,11 @@ const fetchExcelData = async (client: MSGraphClientV3): Promise<any[]> => {
 const processData = (excelData: any): ExcelRow[] => {
     if (Array.isArray(excelData) && excelData.length > 0) {
         const mappedData: ExcelRow[] = excelData.map((row: any) => ({
-            nameRus: row[0] || '',        // Ф.И.О. (was row[0])
-            FIO: row[1] || '',            // Ф.И.О.2 (was row[1])
-            userEmails: '', // This column no longer exists in the new structure
-            seat: row[6],                 // Seat (was row[10])
-            section: row[7],              // Section (was row[11])
+            nameRus: row[0] || '',
+            FIO: row[1] || '',
+            userEmails: row[8] || '',
+            seat: row[6],
+            section: row[7],
         }));
         return mappedData;
     } else {
@@ -46,14 +46,17 @@ const processData = (excelData: any): ExcelRow[] => {
 
 const findUserByUsernameOrEmail = (data: ExcelRow[], user: User): ExcelRow | undefined => {
     const trimmedDisplayName = user.displayName?.trim() || '';
-    // const principalName = user.userPrincipalName?.split('@')[0] || '';
+    const userEmail = user.mail?.toLowerCase() || '';
 
     return data.find((excelUser) => {
         const trimmedUserRus = excelUser.nameRus?.trim() || '';
         const trimmedUserFIO = excelUser.FIO?.trim() || '';
+        const excelEmail = (excelUser.userEmails || '').toString().toLowerCase();
 
-        // Since userEmails is no longer available, only match by name
-        return trimmedUserRus === trimmedDisplayName || trimmedUserFIO === trimmedDisplayName;
+        // Match by name or email
+        return trimmedUserRus === trimmedDisplayName ||
+            trimmedUserFIO === trimmedDisplayName ||
+            excelEmail === userEmail;
     });
 };
 
@@ -84,7 +87,7 @@ const matchUsersWithExcelData = async (client: MSGraphClientV3): Promise<UserWit
 
         return matchedUsers;
 
-        console.log(matchedUsers,'matchedUsers')
+        console.log(matchedUsers, 'matchedUsers')
     } catch (error) {
         console.error("Error matching users with Excel data:", error);
         throw error;
